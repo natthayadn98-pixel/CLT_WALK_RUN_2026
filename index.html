@@ -22,10 +22,9 @@
       border-radius: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       padding: 32px;
-      max-width: 600px; /* ขยายความกว้างเพื่อรองรับ 4 ปุ่มในแถวแรก */
+      max-width: 650px;
       width: 100%;
     }
-    /* ปรับแต่งปุ่มเลือกสาขา */
     .branch-btn {
       font-size: 0.95rem;
       padding: 10px 4px;
@@ -39,6 +38,46 @@
       color: #ffffff;
       box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
     }
+    .health-terms-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.85rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+    /* ปรับแต่งการเลือกประเภทกิจกรรม */
+    .activity-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-check:checked + .activity-card {
+      border-color: #0284c7;
+      background-color: #f0f9ff;
+      color: #0284c7;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+    }
+    /* สไตล์ตารางกำหนดการ */
+    .schedule-table {
+      font-size: 0.85rem;
+      border-color: #cbd5e1;
+    }
+    .schedule-table th {
+      background-color: #86efac;
+      color: #14532d;
+      font-weight: 600;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .schedule-table td {
+      vertical-align: middle;
+      color: #334155;
+    }
   </style>
 </head>
 <body>
@@ -47,8 +86,8 @@
   <!-- ฟอร์มลงทะเบียน -->
   <div id="formSection">
     <div class="text-center mb-4">
-      <h3 class="fw-bold text-primary">🏃 CLT Outing Fan Run 2026</h3>
-      <p class="text-muted">แบบฟอร์มลงทะเบียนพนักงาน</p>
+      <h3 class="fw-bold text-primary mb-1">🚶 CLT OUTING WALK & RUN 2026 🏃</h3>
+      <p class="text-muted mb-0">แบบฟอร์มลงทะเบียนพนักงาน</p>
     </div>
 
     <form id="regForm">
@@ -58,7 +97,7 @@
         <input type="text" class="form-control form-control-lg fs-6" id="fullname" placeholder="ระบุชื่อและนามสกุล" required>
       </div>
 
-      <!-- 2. สาขา (ปุ่มกด 2 แถว: แถวแรก 4 ปุ่ม, แถวสอง 3 ปุ่ม) -->
+      <!-- 2. สาขา -->
       <div class="mb-4">
         <label class="form-label fw-bold d-block">2. สาขา <span class="text-danger">*</span></label>
         
@@ -101,16 +140,94 @@
 
       <!-- 3. เข้าร่วมกิจกรรม -->
       <div class="mb-4">
-        <label class="form-label fw-bold">3. เข้าร่วมกิจกรรม <span class="text-danger">*</span></label>
-        <div class="d-flex gap-4 mt-1">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="joinStatus" id="joinYes" value="สนใจ" required>
-            <label class="form-check-label" for="joinYes">สนใจ</label>
+        <label class="form-label fw-bold d-block">3. เข้าร่วมกิจกรรม <span class="text-danger">*</span></label>
+        <div class="row g-3">
+          <div class="col-6">
+            <input type="radio" class="btn-check" name="joinStatus" id="walk25" value="เดิน 2.5 KM" required>
+            <label class="d-block text-center activity-card" for="walk25">
+              <span class="fs-4 d-block mb-1">🚶</span>
+              <span>เดิน 2.5 KM</span>
+            </label>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="joinStatus" id="joinNo" value="ไม่สนใจ">
-            <label class="form-check-label" for="joinNo">ไม่สนใจ</label>
+          <div class="col-6">
+            <input type="radio" class="btn-check" name="joinStatus" id="run5" value="วิ่ง 5 KM">
+            <label class="d-block text-center activity-card" for="run5">
+              <span class="fs-4 d-block mb-1">🏃</span>
+              <span>วิ่ง 5 KM</span>
+            </label>
           </div>
+        </div>
+      </div>
+
+      <!-- 4. ข้อกำหนดและการรับรองด้านสุขภาพ -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">4. ข้อกำหนดและการรับรองด้านสุขภาพ <span class="text-danger">*</span></label>
+        <div class="health-terms-box mb-2">
+          <strong>เงื่อนไขความพร้อมของร่างกาย:</strong><br>
+          ข้าพเจ้าขอรับรองว่ามีสุขภาพร่างกายที่แข็งแรงสมบูรณ์ พร้อมสำหรับการเข้าร่วมกิจกรรม และไม่มีภาวะหรืออาการเจ็บป่วยที่เป็นอันตรายต่อการออกกำลังกาย ทั้งนี้ ข้าพเจ้าจะดูแลความปลอดภัยของตนเองอย่างระมัดระวังตลอดการร่วมกิจกรรม
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="healthConsent" required>
+          <label class="form-check-label fw-bold text-dark" for="healthConsent">
+            ข้าพเจ้ายอมรับข้อกำหนดและยืนยันความพร้อมของสุขภาพ
+          </label>
+        </div>
+      </div>
+
+      <!-- กำหนดการกิจกรรม CLT OUTING WALK & RUN 2026 (ต่อจากข้อกำหนดสุขภาพ) -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block">กำหนดการกิจกรรม CLT OUTING WALK & RUN 2026</label>
+        <div class="table-responsive">
+          <table class="table table-bordered schedule-table mb-0">
+            <thead>
+              <tr>
+                <th style="width: 25%;">เวลา</th>
+                <th style="width: 35%;">กิจกรรม</th>
+                <th style="width: 40%;">รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-center">05:00 – 05:30 น.</td>
+                <td>ลงทะเบียน</td>
+                <td>รายงานตัว ณ สนามฟุตบอล รับ Wristband แบ่งสีตามประเภท</td>
+              </tr>
+              <tr>
+                <td class="text-center">05:30 – 05:35 น.</td>
+                <td>พิธีเปิด & Warm-up</td>
+                <td>ประธานกล่าวเปิดงาน + นำยืดเหยียดร่างกายเตรียมความพร้อม และทีมงานอธิบายข้อมูลเส้นทาง</td>
+              </tr>
+              <tr>
+                <td class="text-center">05:35 น.</td>
+                <td>เข้าจุดปล่อยตัว</td>
+                <td>นักวิ่ง/เดิน เข้าประจำจุดปล่อยตัว ณ สนามฟุตบอล</td>
+              </tr>
+              <tr>
+                <td class="text-center">05:40 น.</td>
+                <td>ปล่อยตัวระยะวิ่ง (5.0 กม.)</td>
+                <td>ปล่อยตัวกลุ่มวิ่ง</td>
+              </tr>
+              <tr>
+                <td class="text-center">05:45 น.</td>
+                <td>ปล่อยตัวระยะเดิน (2.5 กม.)</td>
+                <td>ปล่อยตัวกลุ่มเดิน</td>
+              </tr>
+              <tr>
+                <td class="text-center">05:40 – 06:45 น.</td>
+                <td>กิจกรรม WALK & RUN</td>
+                <td>
+                  มีจุดแจกน้ำดื่ม 2 จุด ตามเส้นทาง<br>
+                  - จุดที่ 1 : บริเวณ กม.ที่ 1.25 (ใช้ร่วมกันทั้งระยะเดินและวิ่ง)<br>
+                  - จุดที่ 2 : บริเวณ กม.ที่ 2.5 (จุดกลับตัวระยะวิ่ง 5.0 กม.)
+                </td>
+              </tr>
+              <tr>
+                <td class="text-center">06:45 – 07:00 น.</td>
+                <td>Cool-down & ถ่ายภาพรวม</td>
+                <td>นักกีฬากลับเข้าเส้นชัย ยืดเหยียด ถ่ายภาพหมู่ร่วมกัน และปิดกิจกรรม</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -118,7 +235,7 @@
     </form>
   </div>
 
-  <!-- แสดงผลเมื่อบันทึกข้อมูลเรียบร้อย -->
+  <!-- แสดงผลเมื่อบันทึกข้อมูลสำเร็จ -->
   <div id="resultSection" style="display: none;" class="text-center">
     <div class="py-3">
       <div class="text-success display-4 mb-2">✓</div>
@@ -136,17 +253,29 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec"; // นำ URL Web App ของ Apps Script มาวางตรงนี้
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
 
-  const form = document.getElementById('regForm');
+  const regForm = document.getElementById('regForm');
   const submitBtn = document.getElementById('submitBtn');
 
-  form.addEventListener('submit', async function(e) {
+  regForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const selectedBranch = document.querySelector('input[name="branch"]:checked');
     if (!selectedBranch) {
       alert("กรุณาเลือกสาขาของคุณ");
+      return;
+    }
+
+    const selectedJoinStatus = document.querySelector('input[name="joinStatus"]:checked');
+    if (!selectedJoinStatus) {
+      alert("กรุณาเลือกระยะทางกิจกรรม (เดิน 2.5 KM หรือ วิ่ง 5 KM)");
+      return;
+    }
+
+    const healthConsent = document.getElementById('healthConsent');
+    if (!healthConsent.checked) {
+      alert("กรุณาติ๊กยอมรับข้อกำหนดด้านสุขภาพก่อนลงทะเบียน");
       return;
     }
 
@@ -156,7 +285,7 @@
     const payload = {
       fullname: document.getElementById('fullname').value.trim(),
       branch: selectedBranch.value,
-      joinStatus: document.querySelector('input[name="joinStatus"]:checked').value
+      joinStatus: selectedJoinStatus.value
     };
 
     try {
