@@ -1,1 +1,1 @@
-# CLT-Outing-Fan-Run-2026
+# CLT OUTING WALK & RUN 2026
