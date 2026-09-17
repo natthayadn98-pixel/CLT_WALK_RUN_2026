@@ -15,29 +15,39 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px 12px;
+      padding: 16px 12px;
     }
     .card-box {
       background: #ffffff;
       border-radius: 20px;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-      padding: 32px 28px;
+      padding: 28px 20px;
       max-width: 650px;
       width: 100%;
     }
+    
+    /* สไตล์ปุ่มเลือกสาขาแบบ Responsive */
     .branch-btn {
-      font-size: 0.9rem;
-      padding: 10px 2px;
-      white-space: nowrap;
-      border-radius: 10px !important;
+      font-size: 0.92rem;
+      padding: 12px 6px;
+      border-radius: 12px !important;
       transition: all 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px; /* ความสูงมาตรฐานให้แตะง่ายบนมือถือ */
+      text-align: center;
+      line-height: 1.25;
     }
+    
     .btn-check:checked + .btn-outline-primary {
       background-color: #0284c7;
       border-color: #0284c7;
       color: #ffffff;
       box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+      font-weight: 500;
     }
+    
     .date-badge {
       background-color: #e0f2fe;
       color: #0369a1;
@@ -74,6 +84,7 @@
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
     }
+    
     /* สไตล์ตารางกำหนดการ */
     .schedule-table {
       font-size: 0.85rem;
@@ -95,6 +106,17 @@
     .col-time {
       white-space: nowrap;
       font-weight: 500;
+    }
+
+    /* บนหน้าจอมือถือเล็ก ปรับตัวหนังสือปุ่มให้พอดี */
+    @media (max-width: 575.98px) {
+      .card-box {
+        padding: 24px 16px;
+      }
+      .branch-btn {
+        font-size: 0.88rem;
+        padding: 10px 4px;
+      }
     }
   </style>
 </head>
@@ -121,41 +143,41 @@
         <input type="text" class="form-control form-control-lg fs-6" id="fullname" placeholder="ระบุชื่อและนามสกุล" required>
       </div>
 
-      <!-- 2. สาขา -->
+      <!-- 2. สาขา (Responsive: จอคอม 4+3 ปุ่ม / จอมือถือ แถวละ 2 ปุ่ม และปุ่มสุดท้ายเต็มแถว) -->
       <div class="mb-4">
         <label class="form-label fw-bold d-block">2. สาขา <span class="text-danger">*</span></label>
         
-        <!-- แถวที่ 1 (4 สาขา) -->
-        <div class="row g-2 mb-2">
-          <div class="col-3">
+        <!-- แถวที่ 1 (ในคอม 4 ปุ่ม / ในมือถือ 2 แถว แถวละ 2 ปุ่ม) -->
+        <div class="row g-2 mb-sm-2 mb-0">
+          <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b1" value="สำนักงานใหญ่" required>
             <label class="btn btn-outline-primary w-100 branch-btn" for="b1">สำนักงานใหญ่</label>
           </div>
-          <div class="col-3">
+          <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b2" value="สาขากรุงเทพ">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b2">สาขากรุงเทพ</label>
           </div>
-          <div class="col-3">
+          <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b3" value="สาขาสงขลา">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b3">สาขาสงขลา</label>
           </div>
-          <div class="col-3">
+          <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b4" value="สาขาขอนแก่น">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b4">สาขาขอนแก่น</label>
           </div>
         </div>
 
-        <!-- แถวที่ 2 (3 สาขา) -->
-        <div class="row g-2 justify-content-center">
-          <div class="col-4">
+        <!-- แถวที่ 2 (ในคอม 3 ปุ่มกึ่งกลาง / ในมือถือ แถวละ 2 ปุ่ม + 1 ปุ่มเต็ม) -->
+        <div class="row g-2 justify-content-center mt-sm-0 mt-2">
+          <div class="col-6 col-sm-4">
             <input type="radio" class="btn-check" name="branch" id="b5" value="สาขาฉะเชิงเทรา">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b5">สาขาฉะเชิงเทรา</label>
           </div>
-          <div class="col-4">
+          <div class="col-6 col-sm-4">
             <input type="radio" class="btn-check" name="branch" id="b6" value="สาขาสมุทรสาคร">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b6">สาขาสมุทรสาคร</label>
           </div>
-          <div class="col-4">
+          <div class="col-12 col-sm-4">
             <input type="radio" class="btn-check" name="branch" id="b7" value="สาขาเชียงใหม่">
             <label class="btn btn-outline-primary w-100 branch-btn" for="b7">สาขาเชียงใหม่</label>
           </div>
@@ -168,14 +190,14 @@
         <div class="row g-3">
           <div class="col-6">
             <input type="radio" class="btn-check" name="joinStatus" id="walk25" value="เดิน 2.5 KM" required>
-            <label class="d-block text-center activity-card" for="walk25">
+            <label class="d-block text-center activity-card h-100" for="walk25">
               <span class="fs-4 d-block mb-1">🚶</span>
               <span>เดิน 2.5 KM</span>
             </label>
           </div>
           <div class="col-6">
             <input type="radio" class="btn-check" name="joinStatus" id="run5" value="วิ่ง 5 KM">
-            <label class="d-block text-center activity-card" for="run5">
+            <label class="d-block text-center activity-card h-100" for="run5">
               <span class="fs-4 d-block mb-1">🏃</span>
               <span>วิ่ง 5 KM</span>
             </label>
