@@ -3,31 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - จัดการริสต์แบนด์ CLT Outing Fan Run 2026</title>
+  <title>Admin - CLT OUTING WALK & RUN 2026</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     body {
       font-family: 'Kanit', sans-serif;
-      background-color: #f8fafc;
-      padding: 25px;
+      background-color: #f1f5f9;
+      padding: 24px 16px;
+      color: #1e293b;
     }
-    /* ดีไซน์ตัวริสต์แบนด์ (Wristband Ticket) สำหรับพิมพ์หน้างาน */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .stat-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      padding: 18px 20px;
+    }
+    /* ดีไซน์พรีวิวริสต์แบนด์ (Wristband Ticket) */
     .wristband-preview {
       width: 100%;
-      max-width: 480px;
-      margin: auto;
-      border: 2px dashed #0284c7;
-      border-radius: 12px;
-      padding: 20px;
+      max-width: 440px;
+      margin: 0 auto;
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 18px;
       background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
     }
+    .wristband-preview.walk-theme {
+      border-color: #0284c7;
+      border-left: 10px solid #0284c7;
+    }
+    .wristband-preview.run-theme {
+      border-color: #ea580c;
+      border-left: 10px solid #ea580c;
+    }
+    .badge-walk {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      font-weight: 500;
+    }
+    .badge-run {
+      background-color: #ffedd5;
+      color: #c2410c;
+      font-weight: 500;
+    }
+    /* ตั้งค่าหน้าพิมพ์สำหรับเครื่องพิมพ์สติกเกอร์ / กระดาษ */
     @media print {
       body * {
         visibility: hidden;
@@ -40,30 +73,70 @@
         left: 0;
         top: 0;
         width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .wristband-preview {
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="container-fluid max-w-1200">
+<div class="main-container">
+  <!-- หัวข้อหลัก -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
-      <h3 class="fw-bold text-dark mb-0">🎽 ระบบสร้าง QR Wristband - CLT Outing Fan Run 2026</h3>
-      <p class="text-muted mb-0">ดึงข้อมูลสดจาก Google Sheet สำหรับเช็คชื่อและออกสายรัดข้อมือ</p>
+      <h3 class="fw-bold mb-1 text-primary">🎽 ระบบจัดการริสต์แบนด์ - CLT OUTING WALK & RUN 2026</h3>
+      <p class="text-muted mb-0">ตรวจสอบรายชื่อพนักงานและสร้าง QR Code สำหรับสายรัดข้อมือหน้างาน</p>
     </div>
-    <button onclick="fetchData()" class="btn btn-primary">🔄 รีเฟรชข้อมูล</button>
+    <button onclick="fetchData()" id="refreshBtn" class="btn btn-primary px-3 py-2 shadow-sm">
+      🔄 รีเฟรชข้อมูล
+    </button>
   </div>
 
-  <!-- ฟิลเตอร์ค้นหา -->
-  <div class="card mb-4 border-0 shadow-sm">
+  <!-- แดชบอร์ดสรุปยอด -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between">
+        <div>
+          <span class="text-muted small d-block">ยอดลงทะเบียนรวม</span>
+          <h3 class="fw-bold mb-0 text-dark" id="totalCount">0</h3>
+        </div>
+        <span class="fs-2">👥</span>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between border-start border-4 border-info">
+        <div>
+          <span class="text-muted small d-block">เดิน 2.5 KM</span>
+          <h3 class="fw-bold mb-0 text-primary" id="walkCount">0</h3>
+        </div>
+        <span class="fs-2">🚶</span>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card d-flex align-items-center justify-content-between border-start border-4 border-warning">
+        <div>
+          <span class="text-muted small d-block">วิ่ง 5 KM</span>
+          <h3 class="fw-bold mb-0 text-warning" id="runCount">0</h3>
+        </div>
+        <span class="fs-2">🏃</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ค้นหาและคัดกรอง -->
+  <div class="card mb-4 border-0 shadow-sm rounded-4">
     <div class="card-body row g-3">
-      <div class="col-md-6">
+      <div class="col-md-5">
         <input type="text" id="searchInput" class="form-control" placeholder="🔍 ค้นหาชื่อ-สกุล หรือ รหัสประจำตัว..." oninput="filterData()">
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <select id="branchFilter" class="form-select" onchange="filterData()">
-          <option value="">-- ทุกสาขา --</option>
+          <option value="">-- กรองทุกสาขา --</option>
           <option value="สำนักงานใหญ่">สำนักงานใหญ่</option>
           <option value="สาขากรุงเทพ">สาขากรุงเทพ</option>
           <option value="สาขาสงขลา">สาขาสงขลา</option>
@@ -73,25 +146,32 @@
           <option value="สาขาเชียงใหม่">สาขาเชียงใหม่</option>
         </select>
       </div>
+      <div class="col-md-3">
+        <select id="typeFilter" class="form-select" onchange="filterData()">
+          <option value="">-- กรองทุกระยะทาง --</option>
+          <option value="เดิน 2.5 KM">🚶 เดิน 2.5 KM</option>
+          <option value="วิ่ง 5 KM">🏃 วิ่ง 5 KM</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- ตารางรายชื่อ -->
-  <div class="card border-0 shadow-sm">
+  <!-- ตารางแสดงรายชื่อ -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
         <thead class="table-light">
           <tr>
-            <th>รหัส (ID)</th>
-            <th>ชื่อ - สกุล</th>
-            <th>สาขา</th>
-            <th>ความสนใจ</th>
-            <th class="text-center">สร้างริสต์แบนด์</th>
+            <th class="ps-3" style="width: 15%;">รหัส (ID)</th>
+            <th style="width: 25%;">ชื่อ - สกุล</th>
+            <th style="width: 20%;">สาขา</th>
+            <th style="width: 20%;">ประเภทกิจกรรม</th>
+            <th class="text-center" style="width: 20%;">การกระทำ</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <tr>
-            <td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูล...</td>
+            <td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุด...</td>
           </tr>
         </tbody>
       </table>
@@ -99,40 +179,46 @@
   </div>
 </div>
 
-<!-- Modal สำหรับพรีวิว Wristband และสั่งพิมพ์ -->
+<!-- Modal พรีวิวและสั่งพิมพ์ริสต์แบนด์ -->
 <div class="modal fade" id="wristbandModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold">สร้างริสต์แบนด์พนักงาน</h5>
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold">สร้างและพิมพ์ริสต์แบนด์</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body py-4">
         <div id="printArea">
-          <div class="wristband-preview shadow-sm">
+          <div id="wristbandCard" class="wristband-preview shadow-sm">
             <div>
-              <small class="text-uppercase text-muted fw-bold d-block">CLT Fan Run 2026</small>
-              <h4 id="wbRegId" class="text-primary fw-bold mb-1"></h4>
-              <h6 id="wbName" class="fw-bold mb-1 text-dark"></h6>
-              <span id="wbBranch" class="badge bg-secondary"></span>
+              <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size: 0.75rem;">
+                CLT OUTING WALK & RUN 2026
+              </small>
+              <h4 id="wbRegId" class="fw-bold mb-1"></h4>
+              <h5 id="wbName" class="fw-bold mb-2 text-dark"></h5>
+              <div class="d-flex gap-1 flex-wrap">
+                <span id="wbBranch" class="badge bg-secondary"></span>
+                <span id="wbDistance" class="badge"></span>
+              </div>
             </div>
             <div id="qrcodeCanvas"></div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-        <button type="button" class="btn btn-success" onclick="window.print()">🖨️ พิมพ์ริสต์แบนด์</button>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">ปิด</button>
+        <button type="button" class="btn btn-success px-4" onclick="window.print()">🖨️ พิมพ์ริสต์แบนด์</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec"; // ใส่ Web App URL ตัวเดียวกับ index.html
+  // Web App URL ของคุณ
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
+  
   let participants = [];
   let modalInstance = null;
 
@@ -143,56 +229,80 @@
 
   async function fetchData() {
     const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุด...</td></tr>';
+    const refreshBtn = document.getElementById('refreshBtn');
+    
+    refreshBtn.disabled = true;
+    refreshBtn.innerText = "กำลังดึงข้อมูล...";
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุดจาก Google Sheets...</td></tr>';
     
     try {
       const res = await fetch(SCRIPT_URL);
       const json = await res.json();
+      
       if (json.status === 'success') {
-        participants = json.data;
+        participants = json.data || [];
+        updateCounters(participants);
         renderTable(participants);
       } else {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">${json.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">${json.message || 'ไม่สามารถดึงข้อมูลได้'}</td></tr>`;
       }
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">เกิดข้อผิดพลาดในการเชื่อมต่อกับ Apps Script</td></tr>';
+    } finally {
+      refreshBtn.disabled = false;
+      refreshBtn.innerText = "🔄 รีเฟรชข้อมูล";
     }
+  }
+
+  function updateCounters(data) {
+    document.getElementById('totalCount').innerText = data.length;
+    document.getElementById('walkCount').innerText = data.filter(i => (i.joinStatus || '').includes('เดิน')).length;
+    document.getElementById('runCount').innerText = data.filter(i => (i.joinStatus || '').includes('วิ่ง')).length;
   }
 
   function renderTable(data) {
     const tbody = document.getElementById('tableBody');
     if (data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">ไม่พบข้อมูล</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">ไม่พบข้อมูลผู้ลงทะเบียน</td></tr>';
       return;
     }
 
-    tbody.innerHTML = data.map((item, idx) => `
-      <tr>
-        <td class="fw-bold text-primary">${item.regId}</td>
-        <td class="fw-semibold">${item.fullname}</td>
-        <td>${item.branch}</td>
-        <td>
-          <span class="badge ${item.joinStatus === 'สนใจ' ? 'bg-success' : 'bg-secondary'}">
-            ${item.joinStatus}
-          </span>
-        </td>
-        <td class="text-center">
-          <button class="btn btn-sm btn-outline-primary" onclick="openWristbandModal(${idx})">
-            🏷️ สร้าง QR ริสต์แบนด์
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = data.map((item, idx) => {
+      const isRun = (item.joinStatus || '').includes('วิ่ง');
+      const badgeClass = isRun ? 'badge-run' : 'badge-walk';
+      const icon = isRun ? '🏃' : '🚶';
+
+      return `
+        <tr>
+          <td class="ps-3 fw-bold text-primary">${item.regId}</td>
+          <td class="fw-semibold">${item.fullname}</td>
+          <td>${item.branch}</td>
+          <td>
+            <span class="badge ${badgeClass} px-2 py-1">
+              ${icon} ${item.joinStatus}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-primary shadow-sm" onclick="openWristbandModal(${idx})">
+              🏷️ ทำริสต์แบนด์
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   function filterData() {
-    const searchVal = document.getElementById('searchInput').value.toLowerCase();
+    const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
     const branchVal = document.getElementById('branchFilter').value;
+    const typeVal = document.getElementById('typeFilter').value;
 
     const filtered = participants.filter(item => {
-      const matchSearch = item.fullname.toLowerCase().includes(searchVal) || item.regId.toLowerCase().includes(searchVal);
+      const matchSearch = (item.fullname || '').toLowerCase().includes(searchVal) || 
+                          (item.regId || '').toLowerCase().includes(searchVal);
       const matchBranch = branchVal === "" || item.branch === branchVal;
-      return matchSearch && matchBranch;
+      const matchType = typeVal === "" || item.joinStatus === typeVal;
+      return matchSearch && matchBranch && matchType;
     });
 
     renderTable(filtered);
@@ -200,15 +310,30 @@
 
   function openWristbandModal(index) {
     const item = participants[index];
+    const wbCard = document.getElementById('wristbandCard');
+    const wbDistance = document.getElementById('wbDistance');
+    const isRun = (item.joinStatus || '').includes('วิ่ง');
+
     document.getElementById('wbRegId').innerText = item.regId;
     document.getElementById('wbName').innerText = item.fullname;
     document.getElementById('wbBranch').innerText = item.branch;
 
-    // เคลียร์ QR Code เดิมก่อนสร้างใหม่
+    // เปลี่ยนสีแถบริสต์แบนด์ตามระยะทาง
+    if (isRun) {
+      wbCard.className = "wristband-preview shadow-sm run-theme";
+      document.getElementById('wbRegId').className = "fw-bold mb-1 text-danger";
+      wbDistance.className = "badge bg-warning text-dark";
+      wbDistance.innerText = "🏃 " + item.joinStatus;
+    } else {
+      wbCard.className = "wristband-preview shadow-sm walk-theme";
+      document.getElementById('wbRegId').className = "fw-bold mb-1 text-primary";
+      wbDistance.className = "badge bg-info text-dark";
+      wbDistance.innerText = "🚶 " + item.joinStatus;
+    }
+
+    // สร้าง QR Code บรรจุรหัสผู้สมัคร (regId)
     const qrContainer = document.getElementById("qrcodeCanvas");
     qrContainer.innerHTML = "";
-
-    // สร้าง QR Code บรรจุรหัสประจำตัว (regId)
     new QRCode(qrContainer, {
       text: item.regId,
       width: 100,
