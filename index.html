@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลงทะเบียน - CLT Outing Fan Run 2026</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card-box {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 32px;
+      max-width: 600px; /* ขยายความกว้างเพื่อรองรับ 4 ปุ่มในแถวแรก */
+      width: 100%;
+    }
+    /* ปรับแต่งปุ่มเลือกสาขา */
+    .branch-btn {
+      font-size: 0.95rem;
+      padding: 10px 4px;
+      white-space: nowrap;
+      border-radius: 10px !important;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-check:checked + .btn-outline-primary {
+      background-color: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card-box">
+  <!-- ฟอร์มลงทะเบียน -->
+  <div id="formSection">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold text-primary">🏃 CLT Outing Fan Run 2026</h3>
+      <p class="text-muted">แบบฟอร์มลงทะเบียนพนักงาน</p>
+    </div>
+
+    <form id="regForm">
+      <!-- 1. ชื่อ - สกุล -->
+      <div class="mb-4">
+        <label for="fullname" class="form-label fw-bold">1. ชื่อ - สกุล <span class="text-danger">*</span></label>
+        <input type="text" class="form-control form-control-lg fs-6" id="fullname" placeholder="ระบุชื่อและนามสกุล" required>
+      </div>
+
+      <!-- 2. สาขา (ปุ่มกด 2 แถว: แถวแรก 4 ปุ่ม, แถวสอง 3 ปุ่ม) -->
+      <div class="mb-4">
+        <label class="form-label fw-bold d-block">2. สาขา <span class="text-danger">*</span></label>
+        
+        <!-- แถวที่ 1 (4 สาขา) -->
+        <div class="row g-2 mb-2">
+          <div class="col-3">
+            <input type="radio" class="btn-check" name="branch" id="b1" value="สำนักงานใหญ่" required>
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b1">สำนักงานใหญ่</label>
+          </div>
+          <div class="col-3">
+            <input type="radio" class="btn-check" name="branch" id="b2" value="สาขากรุงเทพ">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b2">สาขากรุงเทพ</label>
+          </div>
+          <div class="col-3">
+            <input type="radio" class="btn-check" name="branch" id="b3" value="สาขาสงขลา">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b3">สาขาสงขลา</label>
+          </div>
+          <div class="col-3">
+            <input type="radio" class="btn-check" name="branch" id="b4" value="สาขาขอนแก่น">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b4">สาขาขอนแก่น</label>
+          </div>
+        </div>
+
+        <!-- แถวที่ 2 (3 สาขา) -->
+        <div class="row g-2 justify-content-center">
+          <div class="col-4">
+            <input type="radio" class="btn-check" name="branch" id="b5" value="สาขาฉะเชิงเทรา">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b5">สาขาฉะเชิงเทรา</label>
+          </div>
+          <div class="col-4">
+            <input type="radio" class="btn-check" name="branch" id="b6" value="สาขาสมุทรสาคร">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b6">สาขาสมุทรสาคร</label>
+          </div>
+          <div class="col-4">
+            <input type="radio" class="btn-check" name="branch" id="b7" value="สาขาเชียงใหม่">
+            <label class="btn btn-outline-primary w-100 branch-btn" for="b7">สาขาเชียงใหม่</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. เข้าร่วมกิจกรรม -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">3. เข้าร่วมกิจกรรม <span class="text-danger">*</span></label>
+        <div class="d-flex gap-4 mt-1">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="joinStatus" id="joinYes" value="สนใจ" required>
+            <label class="form-check-label" for="joinYes">สนใจ</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="joinStatus" id="joinNo" value="ไม่สนใจ">
+            <label class="form-check-label" for="joinNo">ไม่สนใจ</label>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-primary w-100 py-2 fs-5">ลงทะเบียน</button>
+    </form>
+  </div>
+
+  <!-- แสดงผลเมื่อบันทึกข้อมูลเรียบร้อย -->
+  <div id="resultSection" style="display: none;" class="text-center">
+    <div class="py-3">
+      <div class="text-success display-4 mb-2">✓</div>
+      <h4 class="text-success fw-bold">ลงทะเบียนเรียบร้อยแล้ว</h4>
+      <p class="text-muted mt-2">ระบบได้บันทึกข้อมูลของคุณแล้ว ติดต่อรับริสต์แบนด์ได้ที่จุดลงทะเบียนหน้างาน</p>
+      
+      <div class="p-3 bg-light rounded-3 mt-3 border">
+        <span class="text-muted small d-block">รหัสลงทะเบียนของคุณ</span>
+        <h3 id="showRegId" class="text-primary fw-bold mb-0"></h3>
+      </div>
+
+      <button onclick="window.location.reload();" class="btn btn-outline-secondary w-100 mt-4">ลงทะเบียนเพิ่มอีกคน</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec"; // นำ URL Web App ของ Apps Script มาวางตรงนี้
+
+  const form = document.getElementById('regForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const selectedBranch = document.querySelector('input[name="branch"]:checked');
+    if (!selectedBranch) {
+      alert("กรุณาเลือกสาขาของคุณ");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "กำลังบันทึกข้อมูล...";
+
+    const payload = {
+      fullname: document.getElementById('fullname').value.trim(),
+      branch: selectedBranch.value,
+      joinStatus: document.querySelector('input[name="joinStatus"]:checked').value
+    };
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+      });
+      const response = await res.json();
+
+      if (response.status === 'success') {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+        document.getElementById('showRegId').innerText = response.regId;
+      } else {
+        alert('เกิดข้อผิดพลาด: ' + response.message);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ลงทะเบียน";
+      }
+    } catch (err) {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อระบบ');
+      submitBtn.disabled = false;
+      submitBtn.innerText = "ลงทะเบียน";
+    }
+  });
+</script>
+
+</body>
+</html>
