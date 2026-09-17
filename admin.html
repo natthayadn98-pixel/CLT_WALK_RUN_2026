@@ -28,6 +28,36 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
       padding: 18px 20px;
     }
+    /* กล่องเข้าสู่ระบบด้วยรหัสผ่าน */
+    #loginOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 35px 30px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .pin-input {
+      font-size: 1.8rem;
+      letter-spacing: 0.35rem;
+      text-align: center;
+      border-radius: 12px;
+      font-weight: bold;
+    }
     /* ดีไซน์พรีวิวริสต์แบนด์ (Wristband Ticket) */
     .wristband-preview {
       width: 100%;
@@ -60,7 +90,7 @@
       color: #c2410c;
       font-weight: 500;
     }
-    /* ตั้งค่าหน้าพิมพ์สำหรับเครื่องพิมพ์สติกเกอร์ / กระดาษ */
+    /* ตั้งค่าหน้าพิมพ์สำหรับเครื่องพิมพ์ */
     @media print {
       body * {
         visibility: hidden;
@@ -85,16 +115,39 @@
 </head>
 <body>
 
-<div class="main-container">
+<!-- หน้าต่างใส่รหัสผ่าน (แสดงเริ่มต้น บังหน้าจอทั้งหมด) -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="display-6 mb-2">🔒</div>
+    <h4 class="fw-bold mb-1">ระบบจัดการ Admin</h4>
+    <p class="text-muted small mb-4">กรุณากรอกรหัสผ่านเพื่อเข้าถึงข้อมูล</p>
+    
+    <form id="loginForm">
+      <div class="mb-3">
+        <input type="password" id="pinInput" class="form-control pin-input" maxlength="6" placeholder="•••" autofocus required>
+        <div id="loginError" class="text-danger small mt-2 d-none">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 py-2 fs-6 fw-bold rounded-3">เข้าสู่ระบบ</button>
+    </form>
+  </div>
+</div>
+
+<!-- เนื้อหา Dashboard (ถูกซ่อน d-none จนกว่าจะใส่รหัสผ่านถูกต้อง) -->
+<div id="adminContent" class="main-container d-none">
   <!-- หัวข้อหลัก -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
       <h3 class="fw-bold mb-1 text-primary">🎽 ระบบจัดการริสต์แบนด์ - CLT OUTING WALK & RUN 2026</h3>
       <p class="text-muted mb-0">ตรวจสอบรายชื่อพนักงานและสร้าง QR Code สำหรับสายรัดข้อมือหน้างาน</p>
     </div>
-    <button onclick="fetchData()" id="refreshBtn" class="btn btn-primary px-3 py-2 shadow-sm">
-      🔄 รีเฟรชข้อมูล
-    </button>
+    <div class="d-flex gap-2">
+      <button onclick="fetchData()" id="refreshBtn" class="btn btn-primary px-3 py-2 shadow-sm">
+        🔄 รีเฟรชข้อมูล
+      </button>
+      <button onclick="logout()" class="btn btn-outline-danger px-3 py-2 shadow-sm">
+        🚪 ออกจากระบบ
+      </button>
+    </div>
   </div>
 
   <!-- แดชบอร์ดสรุปยอด -->
@@ -216,16 +269,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // Web App URL ของคุณ
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
+  const ADMIN_PIN = "999"; // รหัสผ่านเข้าใช้งาน
   
   let participants = [];
   let modalInstance = null;
 
   document.addEventListener('DOMContentLoaded', () => {
-    modalInstance = new bootstrap.Modal(document.getElementById('wristbandModal'));
-    fetchData();
+    // ตรวจสอบว่าเคยล็อกอินผ่านแล้วใน session นี้หรือไม่
+    if (sessionStorage.getItem('admin_authenticated') === 'true') {
+      unlockDashboard();
+    }
   });
+
+  // ระบบตรวจสอบรหัสผ่าน
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const pin = document.getElementById('pinInput').value.trim();
+    const errorMsg = document.getElementById('loginError');
+
+    if (pin === ADMIN_PIN) {
+      errorMsg.classList.add('d-none');
+      sessionStorage.setItem('admin_authenticated', 'true');
+      unlockDashboard();
+    } else {
+      errorMsg.classList.remove('d-none');
+      document.getElementById('pinInput').value = '';
+      document.getElementById('pinInput').focus();
+    }
+  });
+
+  function unlockDashboard() {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('adminContent').classList.remove('d-none');
+    modalInstance = new bootstrap.Modal(document.getElementById('wristbandModal'));
+    fetchData(); // เริ่มดึงข้อมูลเมื่อใส่รหัสผ่านถูกต้องเท่านั้น
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_authenticated');
+    window.location.reload();
+  }
 
   async function fetchData() {
     const tbody = document.getElementById('tableBody');
@@ -318,7 +402,6 @@
     document.getElementById('wbName').innerText = item.fullname;
     document.getElementById('wbBranch').innerText = item.branch;
 
-    // เปลี่ยนสีแถบริสต์แบนด์ตามระยะทาง
     if (isRun) {
       wbCard.className = "wristband-preview shadow-sm run-theme";
       document.getElementById('wbRegId').className = "fw-bold mb-1 text-danger";
@@ -331,7 +414,6 @@
       wbDistance.innerText = "🚶 " + item.joinStatus;
     }
 
-    // สร้าง QR Code บรรจุรหัสผู้สมัคร (regId)
     const qrContainer = document.getElementById("qrcodeCanvas");
     qrContainer.innerHTML = "";
     new QRCode(qrContainer, {
