@@ -18,7 +18,7 @@
       color: #1e293b;
     }
     .main-container {
-      max-width: 1200px;
+      max-width: 1250px;
       margin: 0 auto;
     }
     .stat-card {
@@ -28,7 +28,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
       padding: 18px 20px;
     }
-    /* กล่องเข้าสู่ระบบด้วยรหัสผ่าน */
+    /* กล่องเข้าสู่ระบบด้วย PIN */
     #loginOverlay {
       position: fixed;
       top: 0;
@@ -90,7 +90,7 @@
       color: #c2410c;
       font-weight: 500;
     }
-    /* ตั้งค่าหน้าพิมพ์สำหรับเครื่องพิมพ์ */
+    /* ตั้งค่าพิมพ์เฉพาะริสต์แบนด์ */
     @media print {
       body * {
         visibility: hidden;
@@ -115,12 +115,12 @@
 </head>
 <body>
 
-<!-- หน้าต่างใส่รหัสผ่าน (แสดงเริ่มต้น บังหน้าจอทั้งหมด) -->
+<!-- หน้าต่างใส่รหัสผ่าน PIN: 999 -->
 <div id="loginOverlay">
   <div class="login-card">
     <div class="display-6 mb-2">🔒</div>
     <h4 class="fw-bold mb-1">ระบบจัดการ Admin</h4>
-    <p class="text-muted small mb-4">กรุณากรอกรหัสผ่านเพื่อเข้าถึงข้อมูล</p>
+    <p class="text-muted small mb-4">กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบ</p>
     
     <form id="loginForm">
       <div class="mb-3">
@@ -132,13 +132,13 @@
   </div>
 </div>
 
-<!-- เนื้อหา Dashboard (ถูกซ่อน d-none จนกว่าจะใส่รหัสผ่านถูกต้อง) -->
+<!-- เนื้อหา Dashboard (ถูกซ่อน d-none เริ่มต้น) -->
 <div id="adminContent" class="main-container d-none">
   <!-- หัวข้อหลัก -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <div>
       <h3 class="fw-bold mb-1 text-primary">🎽 ระบบจัดการริสต์แบนด์ - CLT OUTING WALK & RUN 2026</h3>
-      <p class="text-muted mb-0">ตรวจสอบรายชื่อพนักงานและสร้าง QR Code สำหรับสายรัดข้อมือหน้างาน</p>
+      <p class="text-muted mb-0">ตรวจสอบรายชื่อพนักงานและพิมพ์ QR Code สำหรับสายรัดข้อมือหน้างาน</p>
     </div>
     <div class="d-flex gap-2">
       <button onclick="fetchData()" id="refreshBtn" class="btn btn-primary px-3 py-2 shadow-sm">
@@ -215,16 +215,17 @@
       <table class="table table-hover align-middle mb-0">
         <thead class="table-light">
           <tr>
-            <th class="ps-3" style="width: 15%;">รหัส (ID)</th>
-            <th style="width: 25%;">ชื่อ - สกุล</th>
-            <th style="width: 20%;">สาขา</th>
-            <th style="width: 20%;">ประเภทกิจกรรม</th>
-            <th class="text-center" style="width: 20%;">การกระทำ</th>
+            <th class="ps-3" style="width: 12%;">รหัส (ID)</th>
+            <th style="width: 24%;">ชื่อ - สกุล</th>
+            <th style="width: 18%;">สาขา</th>
+            <th style="width: 16%;">ประเภทกิจกรรม</th>
+            <th style="width: 15%;">เวลาลงทะเบียน</th>
+            <th class="text-center" style="width: 15%;">การกระทำ</th>
           </tr>
         </thead>
         <tbody id="tableBody">
           <tr>
-            <td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุด...</td>
+            <td colspan="6" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุด...</td>
           </tr>
         </tbody>
       </table>
@@ -270,19 +271,18 @@
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
-  const ADMIN_PIN = "999"; // รหัสผ่านเข้าใช้งาน
+  const ADMIN_PIN = "999";
   
   let participants = [];
   let modalInstance = null;
 
   document.addEventListener('DOMContentLoaded', () => {
-    // ตรวจสอบว่าเคยล็อกอินผ่านแล้วใน session นี้หรือไม่
     if (sessionStorage.getItem('admin_authenticated') === 'true') {
       unlockDashboard();
     }
   });
 
-  // ระบบตรวจสอบรหัสผ่าน
+  // ตรวจสอบรหัสผ่าน 999
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const pin = document.getElementById('pinInput').value.trim();
@@ -303,7 +303,7 @@
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('adminContent').classList.remove('d-none');
     modalInstance = new bootstrap.Modal(document.getElementById('wristbandModal'));
-    fetchData(); // เริ่มดึงข้อมูลเมื่อใส่รหัสผ่านถูกต้องเท่านั้น
+    fetchData();
   }
 
   function logout() {
@@ -317,7 +317,7 @@
     
     refreshBtn.disabled = true;
     refreshBtn.innerText = "กำลังดึงข้อมูล...";
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุดจาก Google Sheets...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">กำลังโหลดข้อมูลล่าสุดจาก Google Sheets...</td></tr>';
     
     try {
       const res = await fetch(SCRIPT_URL);
@@ -328,10 +328,10 @@
         updateCounters(participants);
         renderTable(participants);
       } else {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">${json.message || 'ไม่สามารถดึงข้อมูลได้'}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">${json.message || 'ไม่สามารถดึงข้อมูลได้'}</td></tr>`;
       }
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">เกิดข้อผิดพลาดในการเชื่อมต่อกับ Apps Script</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4">เกิดข้อผิดพลาดในการเชื่อมต่อกับ Apps Script</td></tr>';
     } finally {
       refreshBtn.disabled = false;
       refreshBtn.innerText = "🔄 รีเฟรชข้อมูล";
@@ -347,7 +347,7 @@
   function renderTable(data) {
     const tbody = document.getElementById('tableBody');
     if (data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">ไม่พบข้อมูลผู้ลงทะเบียน</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">ไม่พบข้อมูลผู้ลงทะเบียน</td></tr>';
       return;
     }
 
@@ -359,13 +359,17 @@
       return `
         <tr>
           <td class="ps-3 fw-bold text-primary">${item.regId}</td>
-          <td class="fw-semibold">${item.fullname}</td>
+          <td>
+            <span class="fw-semibold text-dark">${item.fullname}</span>
+            <small class="text-success d-block" style="font-size: 0.75rem;">✓ ยอมรับเงื่อนไขสุขภาพ</small>
+          </td>
           <td>${item.branch}</td>
           <td>
             <span class="badge ${badgeClass} px-2 py-1">
               ${icon} ${item.joinStatus}
             </span>
           </td>
+          <td class="small text-muted">${item.timestamp || '-'}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary shadow-sm" onclick="openWristbandModal(${idx})">
               🏷️ ทำริสต์แบนด์

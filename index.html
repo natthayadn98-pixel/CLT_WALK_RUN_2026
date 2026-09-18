@@ -236,7 +236,7 @@
         </div>
       </div>
 
-      <!-- กำหนดการกิจกรรม CLT OUTING WALK & RUN 2026 พร้อมไอคอนปฏิทินเลข 28 -->
+      <!-- กำหนดการกิจกรรม CLT OUTING WALK & RUN 2026 -->
       <div class="mb-4">
         <label class="form-label fw-bold d-flex align-items-center gap-2">
           <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -333,6 +333,7 @@
   const regForm = document.getElementById('regForm');
   const submitBtn = document.getElementById('submitBtn');
   const statusAlert = document.getElementById('statusAlert');
+  const fullnameInput = document.getElementById('fullname');
 
   function checkRegistrationPeriod() {
     const now = new Date();
@@ -391,7 +392,7 @@
     submitBtn.innerText = "กำลังบันทึกข้อมูล...";
 
     const payload = {
-      fullname: document.getElementById('fullname').value.trim(),
+      fullname: fullnameInput.value.trim(),
       branch: selectedBranch.value,
       joinStatus: selectedJoinStatus.value
     };
@@ -408,6 +409,13 @@
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('resultSection').style.display = 'block';
         document.getElementById('showRegId').innerText = response.regId;
+      } else if (response.status === 'duplicate') {
+        // กรณีพบข้อมูลซ้ำ แจ้งเตือนและให้ลงทะเบียนใหม่
+        alert('⚠️ ' + response.message);
+        fullnameInput.value = '';
+        fullnameInput.focus();
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ลงทะเบียน";
       } else {
         alert('เกิดข้อผิดพลาด: ' + (response.message || 'ไม่สามารถบันทึกข้อมูลได้'));
         submitBtn.disabled = false;
