@@ -83,7 +83,7 @@
       font-weight: bold;
     }
 
-    /* สไตล์กลุ่มปุ่มฟิลเตอร์แบบ Responsive & Mobile Scroll */
+    /* ปุ่มฟิลเตอร์ */
     .filter-btn-group {
       display: flex;
       gap: 8px;
@@ -93,9 +93,7 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
-    .filter-btn-group::-webkit-scrollbar {
-      display: none;
-    }
+    .filter-btn-group::-webkit-scrollbar { display: none; }
     .filter-btn {
       font-size: 0.88rem;
       padding: 8px 16px;
@@ -130,115 +128,130 @@
     .badge-run { background-color: #ffedd5; color: #c2410c; font-weight: 500; }
 
     /* ==========================================================================
-       สเปกแผ่นริสต์แบนด์ 1 แผ่นมี 10 เส้น (Sheet of 10 Wristbands)
-       - ความกว้างแต่ละเส้น: 25mm (2.5 cm)
-       - ความยาวแต่ละเส้น: 250mm (25 cm)
-       - 10 เส้นเรียงต่อกัน = หน้ากว้าง 250mm x ยาว 250mm
+       สเปกแผ่นริสต์แบนด์ (ปรับขนาดมินิพิเศษ ป้องกันตกขอบ 100%)
        ========================================================================== */
     .tyvek-sheet {
-      width: 250mm;
-      height: 250mm;
-      margin: 0 auto 15mm auto;
+      width: 240mm; /* บีบความกว้างรวมให้เหลือ 240mm จาก 250mm เพื่อเว้นขอบหัวพิมพ์ */
+      height: 245mm;
+      margin: 0 auto;
       display: flex;
-      flex-direction: row; /* เรียงเส้น 1-10 แนวนอนชิดกันตามกระดาษจริง */
-      background: #ffffff;
+      flex-direction: row;
+      background: transparent;
       box-sizing: border-box;
-      border: 1px solid #e2e8f0;
       page-break-after: always;
       break-after: page;
     }
 
     .tyvek-strip {
-      width: 25mm; /* กว้าง 2.5 ซม. */
-      height: 250mm; /* ยาว 25 ซม. */
+      width: 24mm; /* ความกว้างต่อเส้น 24 มม. */
+      height: 245mm;
       box-sizing: border-box;
-      border-right: 1px dashed #cbd5e1; /* รอยปรุระหว่างเส้น */
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 6mm 1.5mm 0 1.5mm;
+      padding: 12mm 0 0 0; /* เว้นระยะห่างด้านบน 12 มม. */
       position: relative;
-      background: transparent; /* โปร่งใส เพื่อให้เห็นสีกระดาษริสต์แบนด์จริง */
+      background: transparent;
       text-align: center;
     }
-    .tyvek-strip:last-child {
-      border-right: none;
+
+    /* กล่องข้อความปลอดภัย (Safe Core Width: 16.5 มม.) */
+    .tyvek-content-wrapper {
+      width: 16.5mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
     }
 
-    /* เนื้อหาพิมพ์ลงบนหัวสายรัด */
     .tyvek-header {
-      font-size: 6pt;
+      font-size: 4.5pt;
       font-weight: 700;
       line-height: 1.1;
       color: #000000;
-      margin-bottom: 2mm;
+      margin-bottom: 1.5mm;
       text-transform: uppercase;
-      letter-spacing: 0.2px;
+      word-break: break-word;
+      white-space: normal;
     }
+    
     .tyvek-qr {
-      width: 20mm;
-      height: 20mm;
+      width: 13mm; /* ย่อ QR Code ให้เหลือ 13x13 มม. ปลอดภัย ไม่ชนขอบแน่นอน */
+      height: 13mm;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 2mm;
+      margin-bottom: 1.5mm;
     }
+    .tyvek-qr canvas, .tyvek-qr img {
+      width: 13mm !important;
+      height: 13mm !important;
+    }
+
     .tyvek-id {
-      font-size: 9pt;
+      font-size: 7pt;
       font-weight: 800;
       color: #000000;
       line-height: 1.1;
-      margin-bottom: 1.5mm;
+      margin-bottom: 1mm;
+      letter-spacing: -0.2px;
     }
+
     .tyvek-name {
-      font-size: 7.5pt;
+      font-size: 6pt;
       font-weight: 700;
       color: #000000;
       line-height: 1.15;
-      max-height: 18mm;
+      max-height: 14mm;
       overflow: hidden;
       word-break: break-word;
-      margin-bottom: 1.5mm;
-    }
-    .tyvek-badge {
-      font-size: 6pt;
-      font-weight: 700;
-      color: #000000;
-      border: 0.8px solid #000000;
-      border-radius: 3px;
-      padding: 0.8px 3px;
-      margin-bottom: 1.5mm;
-      white-space: nowrap;
-    }
-    .tyvek-branch {
-      font-size: 6pt;
-      font-weight: 600;
-      color: #333333;
-      margin-bottom: 4mm;
-      white-space: nowrap;
+      margin-bottom: 1mm;
     }
 
-    /* ข้อความวิ่งแนวตั้งตรงกลางสาย */
+    .tyvek-badge {
+      font-size: 5pt;
+      font-weight: 700;
+      color: #000000;
+      border: 0.6px solid #000000;
+      border-radius: 2.5px;
+      padding: 0.5px 2px;
+      margin-bottom: 1mm;
+      white-space: nowrap;
+      transform: scale(0.9);
+    }
+
+    .tyvek-branch {
+      font-size: 5pt;
+      font-weight: 600;
+      color: #222222;
+      margin-bottom: 2mm;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 16.5mm;
+    }
+
     .tyvek-rotated-text {
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      font-size: 6.5pt;
+      font-size: 5.5pt;
       font-weight: 600;
-      letter-spacing: 2px;
+      letter-spacing: 1.2px;
       color: #555555;
       margin-top: auto;
-      margin-bottom: 30mm; /* เว้นระยะด้านล่างให้พ้นแถบกาวสีขาว */
+      margin-bottom: 35mm;
+      white-space: nowrap;
     }
 
     #batchPrintContainer { display: none; }
 
     /* ==========================================================================
-       การตั้งค่าหน้าพิมพ์ (Print Media Query)
+       Print Setup
        ========================================================================== */
     @page {
-      size: 250mm 250mm; /* ขนาดแผ่นจริง 10 เส้น */
-      margin: 0;
+      size: A4 portrait;
+      margin: 6mm 4mm;
     }
 
     @media print {
@@ -249,7 +262,6 @@
         margin: 0 !important;
       }
 
-      /* โหมดพิมพ์แผ่นเต็ม 10 เส้น */
       body.printing-batch #batchPrintContainer,
       body.printing-batch #batchPrintContainer * {
         visibility: visible !important;
@@ -259,16 +271,15 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 250mm;
+        width: 100%;
         margin: 0;
         padding: 0;
       }
       .tyvek-sheet {
         border: none !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
       }
 
-      /* โหมดพิมพ์เดี่ยว */
       body.printing-single #printSingleArea,
       body.printing-single #printSingleArea * {
         visibility: visible !important;
@@ -311,11 +322,10 @@
 
 <!-- เนื้อหา Dashboard -->
 <div id="adminContent" class="main-container d-none">
-  <!-- เมนูหัวข้อหลัก -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
-        <h4 class="fw-bold mb-0 text-primary">🎽 ระบบจัดการริสต์แบนด์ - CLT OUTING WALK & RUN 2026</h4>
+        <h4 class="fw-bold mb-0 text-primary">🎽 จัดการริสต์แบนด์ (แผ่นละ 10 เส้น)</h4>
         <span class="live-indicator">
           <span class="live-dot"></span> สด
         </span>
@@ -324,7 +334,7 @@
     </div>
     <div class="d-flex gap-2 flex-wrap w-100 w-sm-auto justify-content-between justify-content-sm-end mt-2 mt-sm-0">
       <button onclick="printAllWristbands()" id="printAllBtn" class="btn btn-success btn-sm px-3 py-2 shadow-sm fw-semibold flex-grow-1 flex-sm-grow-0">
-        🖨️ พิมพ์แผ่นริสต์แบนด์ 
+        🖨️ พิมพ์แผ่นริสต์แบนด์ (10 เส้น/แผ่น)
       </button>
       <button onclick="fetchData(true)" id="refreshBtn" class="btn btn-primary btn-sm px-3 py-2 shadow-sm">
         🔄 รีเฟรช
@@ -364,7 +374,6 @@
         <input type="text" id="searchInput" class="form-control form-control-sm py-2 fs-6 rounded-3" placeholder="🔍 ค้นหาชื่อ-สกุล หรือ รหัส (CLT-0001)..." oninput="handleSearchChange()">
       </div>
 
-      <!-- ปุ่มเลือกสาขา -->
       <div class="mb-3">
         <div class="d-flex justify-content-between align-items-center mb-1">
           <small class="text-muted fw-bold">🏢 สาขา:</small>
@@ -397,7 +406,6 @@
         </div>
       </div>
 
-      <!-- ปุ่มเลือกระยะทาง -->
       <div>
         <small class="text-muted fw-bold d-block mb-1">🏃 ระยะทาง:</small>
         <div class="filter-btn-group" id="typeBtnGroup">
@@ -468,7 +476,7 @@
   </div>
 </div>
 
-<!-- คอนเทนเนอร์สำหรับพิมพ์แผ่นละ 10 เส้น (Sheet of 10) -->
+<!-- คอนเทนเนอร์สำหรับพิมพ์แผ่นละ 10 เส้น -->
 <div id="batchPrintContainer">
   <div id="batchPrintList"></div>
 </div>
@@ -697,40 +705,40 @@
     renderPaginatedTable();
   }
 
-  // สร้างริสต์แบนด์ 1 เส้น (แนวตั้ง กว้าง 2.5 ซม. x ยาว 25 ซม.)
+  // โครงสร้างสายรัดขนาดย่อพิเศษ ป้องกันการตกขอบ
   function createTyvekStripHTML(item, qrId) {
     if (!item) {
-      // ถ้าแผ่นนั้นมีไม่ครบ 10 คน ให้สร้างช่องว่างเปล่าๆ ไว้ เพื่อไม่ให้ตำแหน่งคลาดเคลื่อน
-      return `<div class="tyvek-strip"></div>`;
+      return `<div class="tyvek-strip"><div class="tyvek-content-wrapper"></div></div>`;
     }
     const isRun = (item.joinStatus || '').includes('วิ่ง');
     const icon = isRun ? '🏃' : '🚶';
 
     return `
       <div class="tyvek-strip">
-        <div class="tyvek-header">CLT OUTING<br>WALK & RUN 2026</div>
-        <div class="tyvek-qr"><div id="${qrId}"></div></div>
-        <div class="tyvek-id">${item.regId}</div>
-        <div class="tyvek-name">${item.fullname}</div>
-        <div class="tyvek-badge">${icon} ${item.joinStatus}</div>
-        <div class="tyvek-branch">${item.branch}</div>
+        <div class="tyvek-content-wrapper">
+          <div class="tyvek-header">CLT OUTING<br>WALK & RUN 2026</div>
+          <div class="tyvek-qr"><div id="${qrId}"></div></div>
+          <div class="tyvek-id">${item.regId}</div>
+          <div class="tyvek-name">${item.fullname}</div>
+          <div class="tyvek-badge">${icon} ${item.joinStatus}</div>
+          <div class="tyvek-branch">${item.branch}</div>
+        </div>
         <div class="tyvek-rotated-text">CLT WALK & RUN 2026 ★ HEALTH & FUN</div>
       </div>
     `;
   }
 
-  // --- พิมพ์ทีละเส้น ---
   function openWristbandModal(index) {
     const item = currentFilteredList[index];
     if (!item) return;
 
     const placeholder = document.getElementById('singleWristbandPlaceholder');
-    placeholder.innerHTML = `<div style="border: 1px dashed #64748b; display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
+    placeholder.innerHTML = `<div style="border: 1px dashed #94a3b8; display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
 
     new QRCode(document.getElementById('single_qr'), {
       text: item.regId,
-      width: 70,
-      height: 70,
+      width: 50,
+      height: 50,
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.M
@@ -745,7 +753,6 @@
     window.print();
   }
 
-  // --- พิมพ์แผ่นริสต์แบนด์ (1 แผ่นมี 10 เส้นพอดีตามกระดาษจริง) ---
   async function printAllWristbands() {
     const listToPrint = currentFilteredList.length > 0 ? currentFilteredList : participants;
     
@@ -767,7 +774,6 @@
 
     const qrTasks = [];
 
-    // วนลูปสร้างทีละแผ่น (1 แผ่น = 10 เส้น)
     for (let s = 0; s < totalSheets; s++) {
       const sheetDiv = document.createElement('div');
       sheetDiv.className = 'tyvek-sheet';
@@ -789,14 +795,14 @@
       batchContainer.appendChild(sheetDiv);
     }
 
-    // สร้าง QR Code ให้ครบทุกเส้น
+    // สร้าง QR Code ขนาด 50x50 px (13 มม.) คมชัดและไม่ตกขอบ
     qrTasks.forEach(task => {
       const el = document.getElementById(task.id);
       if (el) {
         new QRCode(el, {
           text: task.text,
-          width: 70,
-          height: 70,
+          width: 50,
+          height: 50,
           colorDark: "#000000",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.M
