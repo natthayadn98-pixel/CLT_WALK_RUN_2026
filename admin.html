@@ -128,7 +128,7 @@
     .badge-run { background-color: #ffedd5; color: #c2410c; font-weight: 500; }
 
     /* ==========================================================================
-       สเปกแผ่นริสต์แบนด์ (เส้นประพิมพ์ติด 100% + ฟอนต์ตัวโตขึ้น)
+       สเปกแผ่นริสต์แบนด์ (นำเส้นประออกทั้งหมด ไม่มีเส้นขอบกั้น)
        ========================================================================== */
     .tyvek-sheet {
       width: 240mm;
@@ -140,10 +140,7 @@
       box-sizing: border-box;
       page-break-after: always;
       break-after: page;
-      border-left: 1.5px dashed #000000; /* เส้นประริมซ้ายสุด */
-      border-bottom: 1px dashed #cbd5e1;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+      border: none !important; /* เอาเส้นขอบแผ่นออก */
     }
 
     .tyvek-strip {
@@ -157,11 +154,10 @@
       position: relative;
       background: transparent;
       text-align: center;
-      border-right: 1.5px dashed #000000; /* เส้นประสีดำคมชัดระหว่างเส้น */
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+      border: none !important; /* เอาเส้นประระหว่างเส้นออก */
     }
 
+    /* กล่องข้อความปลอดภัย ป้องกันการตกขอบ */
     .tyvek-content-wrapper {
       width: 17mm;
       display: flex;
@@ -237,15 +233,15 @@
       max-width: 17mm;
     }
 
-    /* ขยายข้อความให้ใหญ่ขึ้น ชัดเจนสะดุดตาตามที่ต้องการ */
+    /* ข้อความแนวตั้งด้านล่าง ตัวโตชัดเจน */
     .tyvek-rotated-text {
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      font-size: 8.5pt; /* ปรับขนาดให้ใหญ่ขึ้น ชัดเจน */
-      font-weight: 700; /* ตัวหนาพิเศษ */
+      font-size: 8.5pt;
+      font-weight: 700;
       letter-spacing: 2px;
-      color: #000000; /* สีดำเข้ม */
+      color: #000000;
       margin-top: auto;
       margin-bottom: 30mm;
       white-space: nowrap;
@@ -254,7 +250,7 @@
     #batchPrintContainer { display: none; }
 
     /* ==========================================================================
-       Print Setup (บังคับให้เส้นประและสไตล์พิมพ์ติดออกมา 100%)
+       Print Setup
        ========================================================================== */
     @page {
       size: A4 portrait;
@@ -286,14 +282,10 @@
       }
       .tyvek-sheet {
         margin: 0 auto !important;
-        border-left: 1.5px dashed #000000 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        border: none !important;
       }
       .tyvek-strip {
-        border-right: 1.5px dashed #000000 !important; /* บังคับให้เส้นประติดออกมาเสมอ */
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        border: none !important;
       }
 
       body.printing-single #printSingleArea,
@@ -721,7 +713,7 @@
     renderPaginatedTable();
   }
 
-  // โครงสร้างสายรัด 1 เส้น
+  // โครงสร้างสายรัด 1 เส้น (ไม่มีเส้นประ)
   function createTyvekStripHTML(item, qrId) {
     if (!item) {
       return `<div class="tyvek-strip"><div class="tyvek-content-wrapper"></div></div>`;
@@ -749,7 +741,7 @@
     if (!item) return;
 
     const placeholder = document.getElementById('singleWristbandPlaceholder');
-    placeholder.innerHTML = `<div style="border: 1.5px dashed #000000; display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
+    placeholder.innerHTML = `<div style="display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
 
     new QRCode(document.getElementById('single_qr'), {
       text: item.regId,
