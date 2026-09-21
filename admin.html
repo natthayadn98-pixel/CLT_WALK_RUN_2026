@@ -128,11 +128,11 @@
     .badge-run { background-color: #ffedd5; color: #c2410c; font-weight: 500; }
 
     /* ==========================================================================
-       สเปกแผ่นริสต์แบนด์ (ปรับขนาดมินิพิเศษ ป้องกันตกขอบ 100%)
+       สเปกแผ่นริสต์แบนด์ (มีเส้นประคั่นทุกเส้น + ฟอนต์ล่างเท่าเดิม)
        ========================================================================== */
     .tyvek-sheet {
-      width: 240mm; /* บีบความกว้างรวมให้เหลือ 240mm จาก 250mm เพื่อเว้นขอบหัวพิมพ์ */
-      height: 245mm;
+      width: 240mm;
+      height: 248mm;
       margin: 0 auto;
       display: flex;
       flex-direction: row;
@@ -140,24 +140,26 @@
       box-sizing: border-box;
       page-break-after: always;
       break-after: page;
+      border-left: 1px dashed #94a3b8; /* เส้นประขอบซ้ายสุด */
     }
 
     .tyvek-strip {
-      width: 24mm; /* ความกว้างต่อเส้น 24 มม. */
-      height: 245mm;
+      width: 24mm;
+      height: 248mm;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 12mm 0 0 0; /* เว้นระยะห่างด้านบน 12 มม. */
+      padding: 12mm 0 0 0;
       position: relative;
       background: transparent;
       text-align: center;
+      border-right: 1px dashed #94a3b8; /* เส้นประคั่นระหว่างสายรัดแต่ละเส้น */
     }
 
-    /* กล่องข้อความปลอดภัย (Safe Core Width: 16.5 มม.) */
+    /* กล่องข้อความปลอดภัย ป้องกันการตกขอบ */
     .tyvek-content-wrapper {
-      width: 16.5mm;
+      width: 17mm;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -165,7 +167,7 @@
     }
 
     .tyvek-header {
-      font-size: 4.5pt;
+      font-size: 4.8pt;
       font-weight: 700;
       line-height: 1.1;
       color: #000000;
@@ -176,20 +178,20 @@
     }
     
     .tyvek-qr {
-      width: 13mm; /* ย่อ QR Code ให้เหลือ 13x13 มม. ปลอดภัย ไม่ชนขอบแน่นอน */
-      height: 13mm;
+      width: 13.5mm;
+      height: 13.5mm;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 1.5mm;
     }
     .tyvek-qr canvas, .tyvek-qr img {
-      width: 13mm !important;
-      height: 13mm !important;
+      width: 13.5mm !important;
+      height: 13.5mm !important;
     }
 
     .tyvek-id {
-      font-size: 7pt;
+      font-size: 7.5pt;
       font-weight: 800;
       color: #000000;
       line-height: 1.1;
@@ -198,7 +200,7 @@
     }
 
     .tyvek-name {
-      font-size: 6pt;
+      font-size: 6.5pt;
       font-weight: 700;
       color: #000000;
       line-height: 1.15;
@@ -209,36 +211,37 @@
     }
 
     .tyvek-badge {
-      font-size: 5pt;
+      font-size: 5.2pt;
       font-weight: 700;
       color: #000000;
-      border: 0.6px solid #000000;
+      border: 0.7px solid #000000;
       border-radius: 2.5px;
       padding: 0.5px 2px;
       margin-bottom: 1mm;
       white-space: nowrap;
-      transform: scale(0.9);
+      transform: scale(0.92);
     }
 
     .tyvek-branch {
-      font-size: 5pt;
+      font-size: 5.2pt;
       font-weight: 600;
       color: #222222;
       margin-bottom: 2mm;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 16.5mm;
+      max-width: 17mm;
     }
 
+    /* ฟอนต์ข้อความแนวตั้งด้านล่างปรับกลับมาขนาดเดิม คมชัด */
     .tyvek-rotated-text {
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      font-size: 5.5pt;
+      font-size: 7pt; /* ปรับขนาดฟอนต์เท่าเดิม */
       font-weight: 600;
-      letter-spacing: 1.2px;
-      color: #555555;
+      letter-spacing: 1.8px;
+      color: #333333;
       margin-top: auto;
       margin-bottom: 35mm;
       white-space: nowrap;
@@ -276,8 +279,11 @@
         padding: 0;
       }
       .tyvek-sheet {
-        border: none !important;
         margin: 0 auto !important;
+        border-left: 1px dashed #64748b !important;
+      }
+      .tyvek-strip {
+        border-right: 1px dashed #64748b !important; /* บังคับให้เส้นประติดออกมาตอนพิมพ์ */
       }
 
       body.printing-single #printSingleArea,
@@ -705,7 +711,7 @@
     renderPaginatedTable();
   }
 
-  // โครงสร้างสายรัดขนาดย่อพิเศษ ป้องกันการตกขอบ
+  // โครงสร้างสายรัด 1 เส้น
   function createTyvekStripHTML(item, qrId) {
     if (!item) {
       return `<div class="tyvek-strip"><div class="tyvek-content-wrapper"></div></div>`;
@@ -795,7 +801,6 @@
       batchContainer.appendChild(sheetDiv);
     }
 
-    // สร้าง QR Code ขนาด 50x50 px (13 มม.) คมชัดและไม่ตกขอบ
     qrTasks.forEach(task => {
       const el = document.getElementById(task.id);
       if (el) {
