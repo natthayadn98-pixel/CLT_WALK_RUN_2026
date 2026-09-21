@@ -128,7 +128,7 @@
     .badge-run { background-color: #ffedd5; color: #c2410c; font-weight: 500; }
 
     /* ==========================================================================
-       สเปกแผ่นริสต์แบนด์ (มีเส้นประคั่นทุกเส้น + ฟอนต์ล่างเท่าเดิม)
+       สเปกแผ่นริสต์แบนด์ (เส้นประพิมพ์ติด 100% + ฟอนต์ตัวโตขึ้น)
        ========================================================================== */
     .tyvek-sheet {
       width: 240mm;
@@ -140,7 +140,10 @@
       box-sizing: border-box;
       page-break-after: always;
       break-after: page;
-      border-left: 1px dashed #94a3b8; /* เส้นประขอบซ้ายสุด */
+      border-left: 1.5px dashed #000000; /* เส้นประริมซ้ายสุด */
+      border-bottom: 1px dashed #cbd5e1;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     .tyvek-strip {
@@ -154,10 +157,11 @@
       position: relative;
       background: transparent;
       text-align: center;
-      border-right: 1px dashed #94a3b8; /* เส้นประคั่นระหว่างสายรัดแต่ละเส้น */
+      border-right: 1.5px dashed #000000; /* เส้นประสีดำคมชัดระหว่างเส้น */
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
-    /* กล่องข้อความปลอดภัย ป้องกันการตกขอบ */
     .tyvek-content-wrapper {
       width: 17mm;
       display: flex;
@@ -233,24 +237,24 @@
       max-width: 17mm;
     }
 
-    /* ฟอนต์ข้อความแนวตั้งด้านล่างปรับกลับมาขนาดเดิม คมชัด */
+    /* ขยายข้อความให้ใหญ่ขึ้น ชัดเจนสะดุดตาตามที่ต้องการ */
     .tyvek-rotated-text {
       writing-mode: vertical-rl;
       text-orientation: mixed;
       transform: rotate(180deg);
-      font-size: 7pt; /* ปรับขนาดฟอนต์เท่าเดิม */
-      font-weight: 600;
-      letter-spacing: 1.8px;
-      color: #333333;
+      font-size: 8.5pt; /* ปรับขนาดให้ใหญ่ขึ้น ชัดเจน */
+      font-weight: 700; /* ตัวหนาพิเศษ */
+      letter-spacing: 2px;
+      color: #000000; /* สีดำเข้ม */
       margin-top: auto;
-      margin-bottom: 35mm;
+      margin-bottom: 30mm;
       white-space: nowrap;
     }
 
     #batchPrintContainer { display: none; }
 
     /* ==========================================================================
-       Print Setup
+       Print Setup (บังคับให้เส้นประและสไตล์พิมพ์ติดออกมา 100%)
        ========================================================================== */
     @page {
       size: A4 portrait;
@@ -263,6 +267,8 @@
         background: #ffffff !important;
         padding: 0 !important;
         margin: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       body.printing-batch #batchPrintContainer,
@@ -280,10 +286,14 @@
       }
       .tyvek-sheet {
         margin: 0 auto !important;
-        border-left: 1px dashed #64748b !important;
+        border-left: 1.5px dashed #000000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
       .tyvek-strip {
-        border-right: 1px dashed #64748b !important; /* บังคับให้เส้นประติดออกมาตอนพิมพ์ */
+        border-right: 1.5px dashed #000000 !important; /* บังคับให้เส้นประติดออกมาเสมอ */
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       body.printing-single #printSingleArea,
@@ -739,7 +749,7 @@
     if (!item) return;
 
     const placeholder = document.getElementById('singleWristbandPlaceholder');
-    placeholder.innerHTML = `<div style="border: 1px dashed #94a3b8; display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
+    placeholder.innerHTML = `<div style="border: 1.5px dashed #000000; display: inline-block;">${createTyvekStripHTML(item, 'single_qr')}</div>`;
 
     new QRCode(document.getElementById('single_qr'), {
       text: item.regId,
