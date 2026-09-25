@@ -128,7 +128,7 @@
     .badge-run { background-color: #ffedd5; color: #c2410c; font-weight: 500; }
 
     /* ==========================================================================
-       สเปกแผ่นริสต์แบนด์ (นำเส้นประออกทั้งหมด ไม่มีเส้นขอบกั้น)
+       สเปกแผ่นริสต์แบนด์ (นำเส้นประออกทั้งหมด)
        ========================================================================== */
     .tyvek-sheet {
       width: 240mm;
@@ -140,7 +140,7 @@
       box-sizing: border-box;
       page-break-after: always;
       break-after: page;
-      border: none !important; /* เอาเส้นขอบแผ่นออก */
+      border: none !important;
     }
 
     .tyvek-strip {
@@ -154,10 +154,9 @@
       position: relative;
       background: transparent;
       text-align: center;
-      border: none !important; /* เอาเส้นประระหว่างเส้นออก */
+      border: none !important;
     }
 
-    /* กล่องข้อความปลอดภัย ป้องกันการตกขอบ */
     .tyvek-content-wrapper {
       width: 17mm;
       display: flex;
@@ -233,7 +232,6 @@
       max-width: 17mm;
     }
 
-    /* ข้อความแนวตั้งด้านล่าง ตัวโตชัดเจน */
     .tyvek-rotated-text {
       writing-mode: vertical-rl;
       text-orientation: mixed;
@@ -436,12 +434,12 @@
       <table class="table table-hover align-middle mb-0">
         <thead class="table-light">
           <tr>
-            <th class="ps-3" style="width: 12%;">รหัส</th>
+            <th class="ps-3" style="width: 10%;">รหัส</th>
             <th style="width: 25%;">ชื่อ - สกุล</th>
-            <th style="width: 18%;">สาขา</th>
+            <th style="width: 17%;">สาขา</th>
             <th style="width: 15%;">ระยะทาง</th>
             <th style="width: 15%;">เวลา</th>
-            <th class="text-center" style="width: 15%;">ริสต์แบนด์</th>
+            <th class="text-center" style="width: 18%;">การกระทำ</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -459,6 +457,61 @@
       <nav aria-label="Page navigation">
         <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
       </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Modal หน้าต่างแก้ไขข้อมูลผู้ลงทะเบียน -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-primary">✏️ แก้ไขข้อมูลผู้ลงทะเบียน</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="editForm">
+        <div class="modal-body py-3">
+          <input type="hidden" id="editRegId">
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">รหัสลงทะเบียน (ID)</label>
+            <input type="text" id="showEditRegId" class="form-control bg-light fw-bold text-primary" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">ชื่อ - สกุล <span class="text-danger">*</span></label>
+            <input type="text" id="editFullname" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">สาขา <span class="text-danger">*</span></label>
+            <select id="editBranch" class="form-select" required>
+              <option value="สำนักงานใหญ่">สำนักงานใหญ่</option>
+              <option value="สาขากรุงเทพ">สาขากรุงเทพ</option>
+              <option value="สาขาสงขลา">สาขาสงขลา</option>
+              <option value="สาขาขอนแก่น">สาขาขอนแก่น</option>
+              <option value="สาขาฉะเชิงเทรา">สาขาฉะเชิงเทรา</option>
+              <option value="สาขาสมุทรสาคร">สาขาสมุทรสาคร</option>
+              <option value="สาขาเชียงใหม่">สาขาเชียงใหม่</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold d-block">ระยะทางกิจกรรม <span class="text-danger">*</span></label>
+            <div class="d-flex gap-2">
+              <input type="radio" class="btn-check" name="editJoinStatus" id="edit_walk" value="เดิน 2.5 KM" required>
+              <label class="btn btn-outline-info flex-fill py-2" for="edit_walk">🚶 เดิน 2.5 KM</label>
+
+              <input type="radio" class="btn-check" name="editJoinStatus" id="edit_run" value="วิ่ง 5 KM">
+              <label class="btn btn-outline-warning text-dark flex-fill py-2" for="edit_run">🏃 วิ่ง 5 KM</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="submit" id="saveEditBtn" class="btn btn-primary px-4 fw-bold">💾 บันทึกการแก้ไข</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -501,6 +554,7 @@
   let currentFilteredList = [];
   let currentPage = 1;
   let modalInstance = null;
+  let editModalInstance = null;
   let pollTimer = null;
   let isFetching = false;
 
@@ -530,6 +584,7 @@
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('adminContent').classList.remove('d-none');
     modalInstance = new bootstrap.Modal(document.getElementById('wristbandModal'));
+    editModalInstance = new bootstrap.Modal(document.getElementById('editModal'));
 
     const cached = localStorage.getItem('clt_participants_cache');
     if (cached) {
@@ -661,9 +716,14 @@
           </td>
           <td class="small text-muted">${item.timestamp || '-'}</td>
           <td class="text-center">
-            <button class="btn btn-sm btn-outline-primary shadow-sm py-1 px-2" onclick="openWristbandModal(${globalIdx})">
-              🏷️ ทำริสต์แบนด์
-            </button>
+            <div class="d-inline-flex gap-1">
+              <button class="btn btn-sm btn-outline-warning py-1 px-2" title="แก้ไขข้อมูล" onclick="openEditModal('${item.regId}')">
+                ✏️ แก้ไข
+              </button>
+              <button class="btn btn-sm btn-outline-primary py-1 px-2" title="พิมพ์ริสต์แบนด์" onclick="openWristbandModal(${globalIdx})">
+                🏷️ ริสต์แบนด์
+              </button>
+            </div>
           </td>
         </tr>
       `;
@@ -712,6 +772,80 @@
     currentPage = page;
     renderPaginatedTable();
   }
+
+  // -------------------------------------------------------------
+  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (Edit System)
+  // -------------------------------------------------------------
+  function openEditModal(regId) {
+    const item = participants.find(p => p.regId === regId);
+    if (!item) return;
+
+    document.getElementById('editRegId').value = item.regId;
+    document.getElementById('showEditRegId').value = item.regId;
+    document.getElementById('editFullname').value = item.fullname;
+    document.getElementById('editBranch').value = item.branch;
+
+    if ((item.joinStatus || '').includes('วิ่ง')) {
+      document.getElementById('edit_run').checked = true;
+    } else {
+      document.getElementById('edit_walk').checked = true;
+    }
+
+    editModalInstance.show();
+  }
+
+  document.getElementById('editForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const saveBtn = document.getElementById('saveEditBtn');
+    const originalText = saveBtn.innerText;
+    saveBtn.disabled = true;
+    saveBtn.innerText = "กำลังบันทึก...";
+
+    const regId = document.getElementById('editRegId').value;
+    const fullname = document.getElementById('editFullname').value.trim();
+    const branch = document.getElementById('editBranch').value;
+    const joinStatus = document.querySelector('input[name="editJoinStatus"]:checked').value;
+
+    const payload = {
+      action: "update",
+      regId: regId,
+      fullname: fullname,
+      branch: branch,
+      joinStatus: joinStatus
+    };
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+      });
+      const response = await res.json();
+
+      if (response.status === 'success') {
+        // อัปเดตใน Array ข้อมูลหน้าเว็บทันที
+        const target = participants.find(p => p.regId === regId);
+        if (target) {
+          target.fullname = fullname;
+          target.branch = branch;
+          target.joinStatus = joinStatus;
+        }
+        localStorage.setItem('clt_participants_cache', JSON.stringify(participants));
+        updateCounters(participants);
+        filterData();
+
+        editModalInstance.hide();
+        alert('✅ แก้ไขข้อมูลเรียบร้อยแล้ว');
+      } else {
+        alert('เกิดข้อผิดพลาด: ' + (response.message || 'ไม่สามารถบันทึกข้อมูลได้'));
+      }
+    } catch (err) {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerText = originalText;
+    }
+  });
 
   // โครงสร้างสายรัด 1 เส้น (ไม่มีเส้นประ)
   function createTyvekStripHTML(item, qrId) {
