@@ -88,7 +88,7 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 4px;
+      padding-bottom: 6px;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -96,7 +96,7 @@
     .filter-btn-group::-webkit-scrollbar { display: none; }
     .filter-btn {
       font-size: 0.88rem;
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 25px !important;
       border: 1px solid #cbd5e1;
       background-color: #ffffff;
@@ -105,7 +105,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
       user-select: none;
       flex-shrink: 0;
     }
@@ -117,11 +117,39 @@
       font-weight: 500;
       box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
     }
+    .btn-check:checked + .filter-btn .count-badge {
+      background-color: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
     .btn-check:checked + .filter-btn-orange {
       background-color: #ea580c !important;
       border-color: #ea580c !important;
       color: #ffffff !important;
       box-shadow: 0 3px 8px rgba(234, 88, 12, 0.3);
+    }
+
+    .count-badge {
+      font-size: 0.75rem;
+      background-color: #e2e8f0;
+      color: #334155;
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .branch-summary-banner {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .badge-walk { background-color: #e0f2fe; color: #0369a1; font-weight: 500; }
@@ -247,7 +275,7 @@
 
     #batchPrintContainer { display: none; }
 
-    /* ป้ายแจ้งเตือน Toast สำเร็จ */
+    /* Toast */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -271,9 +299,6 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
-    /* ==========================================================================
-       Print Setup
-       ========================================================================== */
     @page {
       size: A4 portrait;
       margin: 6mm 4mm;
@@ -327,13 +352,12 @@
       .stat-card { padding: 12px 14px; }
       .stat-card h4 { font-size: 1.3rem; }
       .table { font-size: 0.88rem; }
-      .filter-btn { font-size: 0.82rem; padding: 6px 13px; }
+      .filter-btn { font-size: 0.82rem; padding: 6px 12px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ป้ายแจ้งเตือนสำเร็จ (Toast Notification) -->
 <div class="toast-container" id="toastBox"></div>
 
 <!-- หน้าต่างใส่รหัส PIN: 999 -->
@@ -409,33 +433,43 @@
 
       <div class="mb-3">
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <small class="text-muted fw-bold">🏢 สาขา:</small>
+          <small class="text-muted fw-bold">🏢 เลือกสาขา (จำนวนสมาชิก):</small>
           <small class="text-muted d-sm-none" style="font-size: 0.7rem;">← เลื่อนดูสาขา →</small>
         </div>
         <div class="filter-btn-group" id="branchBtnGroup">
           <input type="radio" class="btn-check" name="branchFilter" id="bf_all" value="" checked onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_all">ทั้งหมด</label>
+          <label class="filter-btn" for="bf_all">ทั้งหมด <span class="count-badge" id="cnt_all">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_hq" value="สำนักงานใหญ่" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_hq">สำนักงานใหญ่</label>
+          <label class="filter-btn" for="bf_hq">สำนักงานใหญ่ <span class="count-badge" id="cnt_hq">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_bkk" value="สาขากรุงเทพ" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_bkk">สาขากรุงเทพ</label>
+          <label class="filter-btn" for="bf_bkk">สาขากรุงเทพ <span class="count-badge" id="cnt_bkk">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_sk" value="สาขาสงขลา" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_sk">สาขาสงขลา</label>
+          <label class="filter-btn" for="bf_sk">สาขาสงขลา <span class="count-badge" id="cnt_sk">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_kk" value="สาขาขอนแก่น" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_kk">สาขาขอนแก่น</label>
+          <label class="filter-btn" for="bf_kk">สาขาขอนแก่น <span class="count-badge" id="cnt_kk">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_cct" value="สาขาฉะเชิงเทรา" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_cct">สาขาฉะเชิงเทรา</label>
+          <label class="filter-btn" for="bf_cct">สาขาฉะเชิงเทรา <span class="count-badge" id="cnt_cct">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_skn" value="สาขาสมุทรสาคร" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_skn">สาขาสมุทรสาคร</label>
+          <label class="filter-btn" for="bf_skn">สาขาสมุทรสาคร <span class="count-badge" id="cnt_skn">0</span></label>
 
           <input type="radio" class="btn-check" name="branchFilter" id="bf_cm" value="สาขาเชียงใหม่" onchange="handleFilterChange()">
-          <label class="filter-btn" for="bf_cm">สาขาเชียงใหม่</label>
+          <label class="filter-btn" for="bf_cm">สาขาเชียงใหม่ <span class="count-badge" id="cnt_cm">0</span></label>
+        </div>
+      </div>
+
+      <div id="branchSummaryBanner" class="branch-summary-banner mb-3 d-none">
+        <div>
+          <strong id="bannerBranchName" class="text-dark"></strong>: รวมทั้งหมด <strong id="bannerBranchTotal" class="text-primary fs-6">0</strong> คน
+        </div>
+        <div class="d-flex gap-2">
+          <span class="badge badge-walk px-2 py-1">🚶 เดิน 2.5 KM: <strong id="bannerBranchWalk">0</strong></span>
+          <span class="badge badge-run px-2 py-1">🏃 วิ่ง 5 KM: <strong id="bannerBranchRun">0</strong></span>
         </div>
       </div>
 
@@ -443,13 +477,13 @@
         <small class="text-muted fw-bold d-block mb-1">🏃 ระยะทาง:</small>
         <div class="filter-btn-group" id="typeBtnGroup">
           <input type="radio" class="btn-check" name="typeFilter" id="tf_all" value="" checked onchange="handleFilterChange()">
-          <label class="filter-btn" for="tf_all">ทั้งหมด</label>
+          <label class="filter-btn" for="tf_all">ทั้งหมด <span class="count-badge" id="cnt_type_all">0</span></label>
 
           <input type="radio" class="btn-check" name="typeFilter" id="tf_walk" value="เดิน 2.5 KM" onchange="handleFilterChange()">
-          <label class="filter-btn" for="tf_walk">🚶 เดิน 2.5 KM</label>
+          <label class="filter-btn" for="tf_walk">🚶 เดิน 2.5 KM <span class="count-badge" id="cnt_type_walk">0</span></label>
 
           <input type="radio" class="btn-check" name="typeFilter" id="tf_run" value="วิ่ง 5 KM" onchange="handleFilterChange()">
-          <label class="filter-btn filter-btn-orange" for="tf_run">🏃 วิ่ง 5 KM</label>
+          <label class="filter-btn filter-btn-orange" for="tf_run">🏃 วิ่ง 5 KM <span class="count-badge" id="cnt_type_run">0</span></label>
         </div>
       </div>
     </div>
@@ -488,7 +522,7 @@
   </div>
 </div>
 
-<!-- Modal หน้าต่างแก้ไขข้อมูลผู้ลงทะเบียน -->
+<!-- Modal แก้ไขข้อมูล -->
 <div class="modal fade" id="editModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content rounded-4 border-0 shadow">
@@ -564,7 +598,6 @@
   </div>
 </div>
 
-<!-- คอนเทนเนอร์สำหรับพิมพ์แผ่นละ 10 เส้น -->
 <div id="batchPrintContainer">
   <div id="batchPrintList"></div>
 </div>
@@ -574,7 +607,7 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
   const ADMIN_PIN = "999";
-  const AUTO_REFRESH_INTERVAL = 10000;
+  const AUTO_REFRESH_INTERVAL = 12000;
   const PAGE_SIZE = 10;
   
   let participants = [];
@@ -584,6 +617,7 @@
   let editModalInstance = null;
   let pollTimer = null;
   let isFetching = false;
+  let lastKnownId = "";
 
   document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('admin_authenticated') === 'true') {
@@ -591,7 +625,6 @@
     }
   });
 
-  // ฟังก์ชันแสดง Toast แจ้งเตือนความสำเร็จ
   function showSuccessToast(message) {
     const toastBox = document.getElementById('toastBox');
     const toast = document.createElement('div');
@@ -606,11 +639,11 @@
     toastBox.appendChild(toast);
 
     setTimeout(() => {
-      toast.style.transition = 'all 0.4s ease';
+      toast.style.transition = 'all 0.3s ease';
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-15px)';
-      setTimeout(() => toast.remove(), 400);
-    }, 3000);
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(() => toast.remove(), 300);
+    }, 2500);
   }
 
   document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -639,6 +672,9 @@
     if (cached) {
       try {
         participants = JSON.parse(cached);
+        if (participants.length > 0) {
+          lastKnownId = participants[participants.length - 1].regId;
+        }
         updateCounters(participants);
         filterData();
       } catch(e) {}
@@ -665,25 +701,33 @@
     const refreshBtn = document.getElementById('refreshBtn');
     if (isManual) {
       refreshBtn.disabled = true;
-      refreshBtn.innerText = "กำลังซิงก์...";
+      refreshBtn.innerText = "⏳...";
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
     try {
-      const cacheBusterUrl = `${SCRIPT_URL}?t=${Date.now()}`;
-      const res = await fetch(cacheBusterUrl);
+      const res = await fetch(`${SCRIPT_URL}?t=${Date.now()}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
       const json = await res.json();
       
       if (json.status === 'success') {
         const newData = json.data || [];
-        if (JSON.stringify(newData) !== JSON.stringify(participants)) {
+        const newLastId = json.lastId || (newData.length > 0 ? newData[newData.length - 1].regId : "");
+
+        const isDataChanged = (newData.length !== participants.length) || (newLastId !== lastKnownId);
+
+        if (isDataChanged || isManual) {
           participants = newData;
+          lastKnownId = newLastId;
           localStorage.setItem('clt_participants_cache', JSON.stringify(newData));
           updateCounters(participants);
           filterData();
         }
       }
     } catch (err) {
-      console.warn("Sync error:", err);
+      if (isManual) console.warn("Sync warning:", err.message);
     } finally {
       isFetching = false;
       if (isManual) {
@@ -697,6 +741,34 @@
     document.getElementById('totalCount').innerText = data.length;
     document.getElementById('walkCount').innerText = data.filter(i => (i.joinStatus || '').includes('เดิน')).length;
     document.getElementById('runCount').innerText = data.filter(i => (i.joinStatus || '').includes('วิ่ง')).length;
+
+    const branchCounts = {
+      'สำนักงานใหญ่': 0, 'สาขากรุงเทพ': 0, 'สาขาสงขลา': 0,
+      'สาขาขอนแก่น': 0, 'สาขาฉะเชิงเทรา': 0, 'สาขาสมุทรสาคร': 0, 'สาขาเชียงใหม่': 0
+    };
+
+    let walkTotal = 0;
+    let runTotal = 0;
+
+    data.forEach(item => {
+      const b = (item.branch || '').trim();
+      if (branchCounts.hasOwnProperty(b)) branchCounts[b]++;
+      if ((item.joinStatus || '').includes('เดิน')) walkTotal++;
+      else if ((item.joinStatus || '').includes('วิ่ง')) runTotal++;
+    });
+
+    document.getElementById('cnt_all').innerText = data.length;
+    document.getElementById('cnt_hq').innerText = branchCounts['สำนักงานใหญ่'];
+    document.getElementById('cnt_bkk').innerText = branchCounts['สาขากรุงเทพ'];
+    document.getElementById('cnt_sk').innerText = branchCounts['สาขาสงขลา'];
+    document.getElementById('cnt_kk').innerText = branchCounts['สาขาขอนแก่น'];
+    document.getElementById('cnt_cct').innerText = branchCounts['สาขาฉะเชิงเทรา'];
+    document.getElementById('cnt_skn').innerText = branchCounts['สาขาสมุทรสาคร'];
+    document.getElementById('cnt_cm').innerText = branchCounts['สาขาเชียงใหม่'];
+
+    document.getElementById('cnt_type_all').innerText = data.length;
+    document.getElementById('cnt_type_walk').innerText = walkTotal;
+    document.getElementById('cnt_type_run').innerText = runTotal;
   }
 
   function handleFilterChange() {
@@ -713,6 +785,21 @@
     const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
     const branchVal = (document.querySelector('input[name="branchFilter"]:checked') || {}).value || "";
     const typeVal = (document.querySelector('input[name="typeFilter"]:checked') || {}).value || "";
+
+    const banner = document.getElementById('branchSummaryBanner');
+    if (branchVal !== "") {
+      const branchMembers = participants.filter(item => item.branch === branchVal);
+      const bWalk = branchMembers.filter(item => (item.joinStatus || '').includes('เดิน')).length;
+      const bRun = branchMembers.filter(item => (item.joinStatus || '').includes('วิ่ง')).length;
+
+      document.getElementById('bannerBranchName').innerText = `🏢 สรุปข้อมูล ${branchVal}`;
+      document.getElementById('bannerBranchTotal').innerText = branchMembers.length;
+      document.getElementById('bannerBranchWalk').innerText = bWalk;
+      document.getElementById('bannerBranchRun').innerText = bRun;
+      banner.classList.remove('d-none');
+    } else {
+      banner.classList.add('d-none');
+    }
 
     currentFilteredList = participants.filter(item => {
       const matchSearch = (item.fullname || '').toLowerCase().includes(searchVal) || 
@@ -823,7 +910,7 @@
   }
 
   // -------------------------------------------------------------
-  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (Edit System พร้อมแจ้งเตือนสำเร็จ)
+  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (รองรับ CORS / Text-Plain เพื่อป้องกัน Error เชื่อมต่อ)
   // -------------------------------------------------------------
   function openEditModal(regId) {
     const item = participants.find(p => p.regId === regId);
@@ -866,8 +953,8 @@
     try {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
       });
       const response = await res.json();
 
@@ -883,20 +970,19 @@
         filterData();
 
         editModalInstance.hide();
-        // แสดงป้ายแจ้งเตือนสำเร็จ
-        showSuccessToast(`แก้ไขข้อมูลของ ${fullname} (${regId}) สำเร็จเรียบร้อยแล้ว`);
+        showSuccessToast(`แก้ไขข้อมูลของ ${fullname} (${regId}) สำเร็จ`);
       } else {
         alert('เกิดข้อผิดพลาด: ' + (response.message || 'ไม่สามารถบันทึกข้อมูลได้'));
       }
     } catch (err) {
-      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+      console.error("Update Error:", err);
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาตรวจสอบว่าได้ทำการ Deploy Apps Script เป็น "New version" และตั้งสิทธิ์เป็น "Anyone" แล้วหรือไม่');
     } finally {
       saveBtn.disabled = false;
       saveBtn.innerText = originalText;
     }
   });
 
-  // โครงสร้างสายรัด 1 เส้น
   function createTyvekStripHTML(item, qrId) {
     if (!item) {
       return `<div class="tyvek-strip"><div class="tyvek-content-wrapper"></div></div>`;
