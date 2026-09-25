@@ -247,6 +247,30 @@
 
     #batchPrintContainer { display: none; }
 
+    /* ป้ายแจ้งเตือน Toast สำเร็จ */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+    }
+    .custom-toast {
+      background: #ffffff;
+      border-left: 6px solid #10b981;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 280px;
+      animation: slideIn 0.3s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
     /* ==========================================================================
        Print Setup
        ========================================================================== */
@@ -308,6 +332,9 @@
   </style>
 </head>
 <body>
+
+<!-- ป้ายแจ้งเตือนสำเร็จ (Toast Notification) -->
+<div class="toast-container" id="toastBox"></div>
 
 <!-- หน้าต่างใส่รหัส PIN: 999 -->
 <div id="loginOverlay">
@@ -480,7 +507,7 @@
 
           <div class="mb-3">
             <label class="form-label small fw-bold">ชื่อ - สกุล <span class="text-danger">*</span></label>
-            <input type="text" id="editFullname" class="form-control" required>
+            <input type="text" id="editFullname" class="form-control" required autocomplete="off">
           </div>
 
           <div class="mb-3">
@@ -563,6 +590,28 @@
       unlockDashboard();
     }
   });
+
+  // ฟังก์ชันแสดง Toast แจ้งเตือนความสำเร็จ
+  function showSuccessToast(message) {
+    const toastBox = document.getElementById('toastBox');
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.innerHTML = `
+      <span class="fs-4 text-success">✓</span>
+      <div>
+        <div class="fw-bold text-dark" style="font-size: 0.95rem;">สำเร็จ!</div>
+        <small class="text-muted">${message}</small>
+      </div>
+    `;
+    toastBox.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.transition = 'all 0.4s ease';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-15px)';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
 
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -774,7 +823,7 @@
   }
 
   // -------------------------------------------------------------
-  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (Edit System)
+  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (Edit System พร้อมแจ้งเตือนสำเร็จ)
   // -------------------------------------------------------------
   function openEditModal(regId) {
     const item = participants.find(p => p.regId === regId);
@@ -823,7 +872,6 @@
       const response = await res.json();
 
       if (response.status === 'success') {
-        // อัปเดตใน Array ข้อมูลหน้าเว็บทันที
         const target = participants.find(p => p.regId === regId);
         if (target) {
           target.fullname = fullname;
@@ -835,7 +883,8 @@
         filterData();
 
         editModalInstance.hide();
-        alert('✅ แก้ไขข้อมูลเรียบร้อยแล้ว');
+        // แสดงป้ายแจ้งเตือนสำเร็จ
+        showSuccessToast(`แก้ไขข้อมูลของ ${fullname} (${regId}) สำเร็จเรียบร้อยแล้ว`);
       } else {
         alert('เกิดข้อผิดพลาด: ' + (response.message || 'ไม่สามารถบันทึกข้อมูลได้'));
       }
@@ -847,7 +896,7 @@
     }
   });
 
-  // โครงสร้างสายรัด 1 เส้น (ไม่มีเส้นประ)
+  // โครงสร้างสายรัด 1 เส้น
   function createTyvekStripHTML(item, qrId) {
     if (!item) {
       return `<div class="tyvek-strip"><div class="tyvek-content-wrapper"></div></div>`;
