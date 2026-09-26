@@ -130,14 +130,14 @@
 <body>
 
 <div class="card-box">
-  <!-- แสดงแจ้งเตือนสถานะช่วงเวลาเปิด/ปิดรับสมัคร -->
+  <!-- แจ้งเตือนสถานะช่วงเวลาเปิด/ปิดรับสมัคร -->
   <div id="statusAlert" class="alert text-center d-none mb-4" role="alert"></div>
 
-  <!-- แสดงแจ้งเตือนเมื่อพบข้อมูลซ้ำ (ไม่แสดง Register ID) -->
+  <!-- แจ้งเตือนเมื่อพบข้อมูลลงทะเบียนซ้ำ (ไม่แสดง Register ID) -->
   <div id="duplicateAlert" class="alert alert-danger alert-dismissible fade show text-center d-none mb-4 shadow-sm" role="alert">
     <strong>⚠️ ไม่สามารถลงทะเบียนได้!</strong><br>
     <span id="duplicateMsg">คุณได้ทำการลงทะเบียนแล้วในระบบ</span>
-    <div class="small text-muted mt-1">(หากต้องการตรวจสอบข้อมูล กรุณาติดต่อฝ่ายประสานงานหน้างาน)</div>
+    <div class="small text-muted mt-1">(หากต้องการตรวจสอบหรือแก้ไขข้อมูล กรุณาติดต่อผู้ประสานงาน)</div>
     <button type="button" class="btn-close" onclick="closeDuplicateAlert()"></button>
   </div>
 
@@ -147,7 +147,7 @@
       <h3 class="fw-bold text-primary mb-1">🏃 CLT OUTING WALK & RUN 2026 🏃</h3>
       <p class="text-muted mb-2">แบบฟอร์มลงทะเบียนพนักงาน</p>
       
-      <!-- ป้ายวันที่พร้อมไอคอนปฏิทินเลข 28 -->
+      <!-- ป้ายวันที่ -->
       <div class="date-badge">
         <svg class="calendar-icon me-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="2" y="4" width="20" height="18" rx="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
@@ -172,7 +172,7 @@
       <div class="mb-4">
         <label class="form-label fw-bold d-block">2. สาขา <span class="text-danger">*</span></label>
         
-        <!-- แถวที่ 1 (ในคอม 4 ปุ่ม / ในมือถือ 2 ปุ่ม) -->
+        <!-- แถวที่ 1 -->
         <div class="row g-2 mb-sm-2 mb-0">
           <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b1" value="สำนักงานใหญ่" required>
@@ -192,7 +192,7 @@
           </div>
         </div>
 
-        <!-- แถวที่ 2 (ในคอม 3 ปุ่มกึ่งกลาง / ในมือถือ 2 ปุ่ม + 1 ปุ่มเต็มแถว) -->
+        <!-- แถวที่ 2 -->
         <div class="row g-2 justify-content-center mt-sm-0 mt-2">
           <div class="col-6 col-sm-4">
             <input type="radio" class="btn-check" name="branch" id="b5" value="สาขาฉะเชิงเทรา">
@@ -344,9 +344,9 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwEAZbVmfWbCYMALKgYS6cqhPEbE1TH0koWw10ph7-u6VA4xzEYPbsmKi5zXM7v2q/exec";
 
-  // พ.ศ. 2569 = ค.ศ. 2026 (เดือนกันยายน = Index 8, เดือนตุลาคม = Index 9)
-  const START_DATE = new Date(2026, 8, 18, 0, 0, 0);   // 18 ก.ย. 2569 เวลา 00:00:00
-  const END_DATE = new Date(2026, 9, 2, 23, 59, 59);    // 2 ต.ค. 2569 เวลา 23:59:59
+  // กำหนดวันเปิด-ปิดรับสมัคร (18 ก.ย. 2569 - 2 ต.ค. 2569)
+  const START_DATE = new Date(2026, 8, 18, 0, 0, 0);
+  const END_DATE = new Date(2026, 9, 2, 23, 59, 59);
 
   const regForm = document.getElementById('regForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -357,7 +357,6 @@
 
   function checkRegistrationPeriod() {
     const now = new Date();
-
     if (now < START_DATE) {
       statusAlert.className = "alert alert-warning text-center fw-bold";
       statusAlert.innerHTML = "⏳ ระบบยังไม่เปิดให้ลงทะเบียน<br><small class='fw-normal'>เปิดลงทะเบียนวันที่ 18 ก.ย. 2569 เวลา 00:00 น.</small>";
@@ -371,7 +370,6 @@
       disableForm();
       return false;
     }
-
     return true;
   }
 
@@ -414,7 +412,7 @@
     }
 
     submitBtn.disabled = true;
-    submitBtn.innerText = "กำลังตรวจสอบและบันทึกข้อมูล...";
+    submitBtn.innerText = "กำลังบันทึกข้อมูล...";
 
     const payload = {
       fullname: fullnameInput.value.trim(),
@@ -425,8 +423,8 @@
     try {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
       });
       const response = await res.json();
 
@@ -437,8 +435,8 @@
         document.getElementById('showRegId').innerText = response.regId;
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (response.status === 'duplicate') {
-        // มีข้อมูลในระบบแล้ว: แจ้งเตือนว่าลงทะเบียนแล้ว และไม่ให้แสดงค่า Register ID
-        duplicateMsg.innerText = "คุณได้ทำการลงทะเบียนแล้วในระบบ";
+        // หากชื่อซ้ำ: แสดงแจ้งเตือน ไม่แสดง Register ID
+        duplicateMsg.innerText = response.message || "คุณได้ทำการลงทะเบียนแล้วในระบบ";
         duplicateAlert.classList.remove('d-none');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
