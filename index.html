@@ -133,10 +133,11 @@
   <!-- แสดงแจ้งเตือนสถานะช่วงเวลาเปิด/ปิดรับสมัคร -->
   <div id="statusAlert" class="alert text-center d-none mb-4" role="alert"></div>
 
-  <!-- แสดงแจ้งเตือนข้อมูลซ้ำด้านบนฟอร์ม -->
+  <!-- แสดงแจ้งเตือนเมื่อพบข้อมูลซ้ำ (ไม่แสดง Register ID) -->
   <div id="duplicateAlert" class="alert alert-danger alert-dismissible fade show text-center d-none mb-4 shadow-sm" role="alert">
-    <strong>⚠️ พบข้อมูลซ้ำในระบบ!</strong><br>
-    <span id="duplicateMsg">ชื่อ-สกุลนี้ได้ทำการลงทะเบียนไว้แล้ว กรุณาตรวจสอบหรือลงทะเบียนใหม่อีกครั้ง</span>
+    <strong>⚠️ ไม่สามารถลงทะเบียนได้!</strong><br>
+    <span id="duplicateMsg">คุณได้ทำการลงทะเบียนแล้วในระบบ</span>
+    <div class="small text-muted mt-1">(หากต้องการตรวจสอบข้อมูล กรุณาติดต่อฝ่ายประสานงานหน้างาน)</div>
     <button type="button" class="btn-close" onclick="closeDuplicateAlert()"></button>
   </div>
 
@@ -164,7 +165,7 @@
       <div class="mb-4">
         <label for="fullname" class="form-label fw-bold">1. ชื่อ - สกุล <span class="text-danger">*</span></label>
         <input type="text" class="form-control form-control-lg fs-6" id="fullname" placeholder="ระบุชื่อและนามสกุล" required autocomplete="off">
-        <div class="form-text text-muted small">โปรดระบุชื่อและนามสกุลให้ถูกต้อง(ไม่ต้องมีคำนำหน้า)</div>
+        <div class="form-text text-muted small">โปรดระบุชื่อและนามสกุลให้ถูกต้องเพื่อใช้ในการรับริสต์แบนด์หน้างาน</div>
       </div>
 
       <!-- 2. สาขา -->
@@ -314,20 +315,29 @@
     </form>
   </div>
 
-  <!-- แสดงผลเมื่อบันทึกข้อมูลสำเร็จ -->
-  <div id="resultSection" style="display: none;" class="text-center">
-    <div class="py-3">
-      <div class="text-success display-4 mb-2">✓</div>
-      <h4 class="text-success fw-bold">ลงทะเบียนเรียบร้อยแล้ว</h4>
-      <p class="text-muted mt-2">ระบบได้บันทึกข้อมูลของคุณแล้ว ติดต่อรับริสต์แบนด์ได้ที่จุดลงทะเบียนหน้างาน</p>
-      
-      <div class="p-3 bg-light rounded-3 mt-3 border">
-        <span class="text-muted small d-block">รหัสลงทะเบียนของคุณ</span>
-        <h3 id="showRegId" class="text-primary fw-bold mb-0"></h3>
-      </div>
-
-      <button onclick="window.location.reload();" class="btn btn-outline-secondary w-100 mt-4">ลงทะเบียนเพิ่มอีกคน</button>
+  <!-- แสดงผลเมื่อบันทึกข้อมูลครั้งแรกสำเร็จ (แสดง Register ID) -->
+  <div id="resultSection" style="display: none;" class="text-center py-4">
+    <div class="mb-3">
+      <span class="display-3 text-success">✓</span>
     </div>
+    <h3 class="text-success fw-bold mb-2">ลงทะเบียนเรียบร้อยแล้ว</h3>
+    <p class="text-muted fs-6 mb-3">
+      ระบบได้บันทึกข้อมูลของคุณเรียบร้อยแล้ว กรุณาบันทึกหรือจดจำรหัสลงทะเบียนด้านล่างนี้
+    </p>
+
+    <!-- กล่องแสดง Register ID เฉพาะผู้ลงทะเบียนสำเร็จครั้งแรก -->
+    <div class="p-3 bg-light rounded-4 border mx-auto mb-4" style="max-width: 320px;">
+      <small class="text-muted d-block mb-1">รหัสลงทะเบียนของคุณ</small>
+      <h2 id="showRegId" class="text-primary fw-bold mb-0" style="letter-spacing: 1px;"></h2>
+    </div>
+
+    <p class="small text-muted mb-4">
+      ติดต่อรับสายรัดข้อมือ (Wristband) ได้ที่จุดลงทะเบียนหน้างานในวันกิจกรรม
+    </p>
+
+    <button onclick="window.location.reload();" class="btn btn-outline-primary px-4 py-2 rounded-3">
+      ลงทะเบียนเพิ่มอีกคน
+    </button>
   </div>
 </div>
 
@@ -421,18 +431,17 @@
       const response = await res.json();
 
       if (response.status === 'success') {
+        // ลงทะเบียนครั้งแรกสำเร็จ: แสดงผลสำเร็จพร้อม Register ID
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('resultSection').style.display = 'block';
         document.getElementById('showRegId').innerText = response.regId;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (response.status === 'duplicate') {
-        // แจ้งเตือนเมื่อข้อมูลชื่อ-สกุลซ้ำ
-        duplicateMsg.innerText = response.message || 'ชื่อ-สกุลนี้ได้ทำการลงทะเบียนไว้ในระบบแล้ว กรุณาลงทะเบียนใหม่';
+        // มีข้อมูลในระบบแล้ว: แจ้งเตือนว่าลงทะเบียนแล้ว และไม่ให้แสดงค่า Register ID
+        duplicateMsg.innerText = "คุณได้ทำการลงทะเบียนแล้วในระบบ";
         duplicateAlert.classList.remove('d-none');
-        
-        // เลื่อนหน้าจอขึ้นไปบนสุดเพื่อให้เห็นการแจ้งเตือน
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // เคลียร์ช่องชื่อ-สกุล และโฟกัสเพื่อให้กรอกใหม่
         fullnameInput.value = '';
         fullnameInput.focus();
         
