@@ -226,19 +226,21 @@
       letter-spacing: -0.2px;
     }
 
+    /* ปรับชื่อ-นามสกุลให้อยู่บรรทัดเดียวกันเสมอ ห้ามตกบรรทัด */
     .tyvek-name {
-      font-size: 6.5pt;
+      font-size: 5.2pt;
       font-weight: 700;
       color: #000000;
-      line-height: 1.15;
-      max-height: 14mm;
+      line-height: 1.2;
+      white-space: nowrap;
       overflow: hidden;
-      word-break: break-word;
+      text-overflow: clip;
+      max-width: 17mm;
       margin-bottom: 1mm;
     }
 
     .tyvek-badge {
-      font-size: 5.2pt;
+      font-size: 5.0pt;
       font-weight: 700;
       color: #000000;
       border: 0.7px solid #000000;
@@ -250,7 +252,7 @@
     }
 
     .tyvek-branch {
-      font-size: 5.2pt;
+      font-size: 5.0pt;
       font-weight: 600;
       color: #222222;
       margin-bottom: 2mm;
@@ -909,9 +911,6 @@
     renderPaginatedTable();
   }
 
-  // -------------------------------------------------------------
-  // ระบบแก้ไขข้อมูลผู้ลงทะเบียน (รองรับ CORS / Text-Plain เพื่อป้องกัน Error เชื่อมต่อ)
-  // -------------------------------------------------------------
   function openEditModal(regId) {
     const item = participants.find(p => p.regId === regId);
     if (!item) return;
