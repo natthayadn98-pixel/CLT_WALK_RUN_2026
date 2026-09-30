@@ -25,7 +25,6 @@
       max-width: 650px;
       width: 100%;
     }
-    
     .branch-btn {
       font-size: 0.92rem;
       padding: 12px 6px;
@@ -38,7 +37,6 @@
       text-align: center;
       line-height: 1.25;
     }
-    
     .btn-check:checked + .btn-outline-primary {
       background-color: #0284c7;
       border-color: #0284c7;
@@ -46,7 +44,6 @@
       box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
       font-weight: 500;
     }
-    
     .date-badge {
       background-color: #e0f2fe;
       color: #0369a1;
@@ -58,14 +55,12 @@
       border-radius: 20px;
       font-weight: 500;
     }
-
     .calendar-icon {
       width: 20px;
       height: 20px;
       vertical-align: -3px;
       display: inline-block;
     }
-
     .health-terms-box {
       background-color: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -93,7 +88,6 @@
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
     }
-    
     .schedule-table {
       font-size: 0.85rem;
       border-color: #cbd5e1;
@@ -115,25 +109,18 @@
       white-space: nowrap;
       font-weight: 500;
     }
-
     @media (max-width: 575.98px) {
-      .card-box {
-        padding: 24px 16px;
-      }
-      .branch-btn {
-        font-size: 0.88rem;
-        padding: 10px 4px;
-      }
+      .card-box { padding: 24px 16px; }
+      .branch-btn { font-size: 0.88rem; padding: 10px 4px; }
     }
   </style>
 </head>
 <body>
 
 <div class="card-box">
-  <!-- แจ้งเตือนสถานะช่วงเวลาเปิด/ปิดรับสมัคร -->
   <div id="statusAlert" class="alert text-center d-none mb-4" role="alert"></div>
 
-  <!-- แจ้งเตือนข้อมูลซ้ำ -->
+  <!-- แจ้งเตือนข้อมูลซ้ำขนาดใหญ่เด่นชัด -->
   <div id="duplicateAlert" class="alert alert-danger alert-dismissible fade show text-center d-none mb-4 shadow" role="alert" style="border-width: 2px;">
     <div class="fs-1 mb-1">⚠️</div>
     <h4 class="fw-bold mb-1">แจ้งเตือน: มีข้อมูลในระบบแล้ว!</h4>
@@ -142,13 +129,11 @@
     <button type="button" class="btn-close" onclick="closeDuplicateAlert()"></button>
   </div>
 
-  <!-- ฟอร์มลงทะเบียน -->
   <div id="formSection">
     <div class="text-center mb-4">
       <h3 class="fw-bold text-primary mb-1">🏃 CLT OUTING WALK & RUN 2026 🏃</h3>
       <p class="text-muted mb-2">แบบฟอร์มลงทะเบียนพนักงาน</p>
       
-      <!-- ป้ายวันที่ -->
       <div class="date-badge">
         <svg class="calendar-icon me-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="2" y="4" width="20" height="18" rx="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
@@ -162,7 +147,7 @@
     </div>
 
     <form id="regForm">
-      <!-- 1. ชื่อ - สกุล พร้อมข้อความคำแนะนำสีแดงเด่นชัด -->
+      <!-- 1. ชื่อ - นามสกุล พร้อมคำแนะนำสีแดง -->
       <div class="mb-4">
         <label for="fullname" class="form-label fw-bold">1. ชื่อ - นามสกุล <span class="text-danger">*</span></label>
         <input type="text" class="form-control form-control-lg fs-6" id="fullname" placeholder="ระบุชื่อและนามสกุล (เช่น สมชาย ใจดี)" required autocomplete="off">
@@ -174,8 +159,6 @@
       <!-- 2. สาขา -->
       <div class="mb-4">
         <label class="form-label fw-bold d-block">2. สาขา <span class="text-danger">*</span></label>
-        
-        <!-- แถวที่ 1 -->
         <div class="row g-2 mb-sm-2 mb-0">
           <div class="col-6 col-sm-3">
             <input type="radio" class="btn-check" name="branch" id="b1" value="สำนักงานใหญ่" required>
@@ -194,8 +177,6 @@
             <label class="btn btn-outline-primary w-100 branch-btn" for="b4">สาขาขอนแก่น</label>
           </div>
         </div>
-
-        <!-- แถวที่ 2 -->
         <div class="row g-2 justify-content-center mt-sm-0 mt-2">
           <div class="col-6 col-sm-4">
             <input type="radio" class="btn-check" name="branch" id="b5" value="สาขาฉะเชิงเทรา">
@@ -233,7 +214,7 @@
         </div>
       </div>
 
-      <!-- 4. ข้อกำหนดและการรับรองด้านสุขภาพ -->
+      <!-- 4. ข้อกำหนดสุขภาพ -->
       <div class="mb-4">
         <label class="form-label fw-bold">4. ข้อกำหนดและการรับรองด้านสุขภาพ <span class="text-danger">*</span></label>
         <div class="health-terms-box mb-2">
@@ -248,7 +229,7 @@
         </div>
       </div>
 
-      <!-- กำหนดการกิจกรรม -->
+      <!-- กำหนดการกิจกรรม (Schedule Table) -->
       <div class="mb-4">
         <label class="form-label fw-bold d-flex align-items-center gap-2">
           <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -318,29 +299,18 @@
     </form>
   </div>
 
-  <!-- แสดงผลเมื่อบันทึกข้อมูลครั้งแรกสำเร็จ (แสดง Register ID) -->
+  <!-- แสดงผลเมื่อลงทะเบียนสำเร็จครั้งแรก -->
   <div id="resultSection" style="display: none;" class="text-center py-4">
     <div class="mb-3">
       <span class="display-3 text-success">✓</span>
     </div>
     <h3 class="text-success fw-bold mb-2">ลงทะเบียนเรียบร้อยแล้ว</h3>
-    <p class="text-muted fs-6 mb-3">
-      ระบบได้บันทึกข้อมูลของคุณเรียบร้อยแล้ว กรุณาบันทึกหรือจดจำรหัสลงทะเบียนด้านล่างนี้
-    </p>
-
-    <!-- กล่องแสดง Register ID -->
+    <p class="text-muted fs-6 mb-3">ระบบได้บันทึกข้อมูลของคุณเรียบร้อยแล้ว กรุณาจดจำรหัสลงทะเบียนด้านล่างนี้</p>
     <div class="p-3 bg-light rounded-4 border mx-auto mb-4" style="max-width: 320px;">
       <small class="text-muted d-block mb-1">รหัสลงทะเบียนของคุณ</small>
       <h2 id="showRegId" class="text-primary fw-bold mb-0" style="letter-spacing: 1px;"></h2>
     </div>
-
-    <p class="small text-muted mb-4">
-      ติดต่อรับสายรัดข้อมือ (Wristband) ได้ที่จุดลงทะเบียนหน้างานในวันกิจกรรม
-    </p>
-
-    <button onclick="window.location.reload();" class="btn btn-outline-primary px-4 py-2 rounded-3">
-      ลงทะเบียนเพิ่มอีกคน
-    </button>
+    <button onclick="window.location.reload();" class="btn btn-outline-primary px-4 py-2 rounded-3">ลงทะเบียนเพิ่มอีกคน</button>
   </div>
 </div>
 
@@ -460,7 +430,11 @@
       if (response.status === 'success') {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('resultSection').style.display = 'block';
-        document.getElementById('showRegId').innerText = response.regId;
+        
+        // ดักจับรหัส Register ID ป้องกัน undefined
+        const generatedId = response.regId || response.id || response.registerId || "CLT-XXXX";
+        document.getElementById('showRegId').innerText = generatedId;
+        
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (response.status === 'duplicate') {
         const msg = "⚠️ แจ้งเตือน: คุณได้ทำการลงทะเบียนแล้วในระบบ ไม่อาจลงทะเบียนซ้ำได้";
